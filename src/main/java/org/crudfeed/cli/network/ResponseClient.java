@@ -1,15 +1,18 @@
 package org.crudfeed.cli.network;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.crudfeed.core.dto.*;
 import org.crudfeed.core.entity.User;
 
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ResponseClient {
@@ -17,40 +20,74 @@ public class ResponseClient {
     @Getter
     private static final ResponseClient INSTANCE = new ResponseClient();
 
-    private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 7777;
+    @Getter
+    @Setter
+    private static String baseUrl = "http://100.65.191.8:8080/api";
 
-    public String sendRequest(String command) {
-        SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+    private final HttpClient httpClient = HttpClient.newHttpClient();
 
-        try (SSLSocket socket = (SSLSocket) socketFactory.createSocket(SERVER_HOST, SERVER_PORT)) {
-            socket.setSoTimeout(5000);
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-            try (DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-                 DataInputStream inputStream = new DataInputStream(socket.getInputStream())) {
-
-                outputStream.writeUTF(command);
-                outputStream.flush();
-
-                return inputStream.readUTF();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Could not connect to secured server!";
+    public String sendGet(String endpoint) {
+        try {
+            String url = baseUrl + "/" + endpoint;
+            return executeGet(url);
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
         }
     }
 
-    public User parseUser(String dataFromServer) {
-        String[] parts = dataFromServer.split("\\|");
+    public <T> String sendPost(String endpoint, T requestDto) {
+        try {
+            String jsonPayload = objectMapper.writeValueAsString(requestDto);
 
-        if (parts.length < 4) {
-            return null;
+            String url = baseUrl + "/" + endpoint;
+
+            return executePost(url, jsonPayload);
+
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    private String executeGet(String url) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            return "Error: Server returned code " + response.statusCode();
         }
 
-        String nickname = parts[1];
-        String password = parts[2];
-        long userId = Long.parseLong(parts[3]);
+        return response.body();
+    }
 
-        return new User(nickname, password, userId);
+    private String executePost(String url, String jsonBody) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            return "Error: Server returned code " + response.statusCode();
+        }
+
+        return response.body();
+    }
+
+    public User parseUser(String jsonResponse) {
+        try {
+            return objectMapper.readValue(jsonResponse, User.class);
+        } catch (Exception e) {
+            System.err.println("JSON parse error: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 }
