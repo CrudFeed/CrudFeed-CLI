@@ -2,7 +2,7 @@ package org.crudfeed.cli.command.impl.message;
 
 import org.crudfeed.cli.command.Command;
 import org.crudfeed.cli.ui.MessageCardCreator;
-import org.crudfeed.core.entity.Session;
+import org.crudfeed.cli.session.Session;
 import org.crudfeed.cli.handler.MessageHandler;
 
 import static java.lang.IO.*;

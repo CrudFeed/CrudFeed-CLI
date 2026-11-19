@@ -1,7 +1,7 @@
 package org.crudfeed.cli.command.impl.system;
 
 import org.crudfeed.cli.command.Command;
-import org.crudfeed.core.entity.Session;
+import org.crudfeed.cli.session.Session;
 
 public class QuitCommand implements Command {
 

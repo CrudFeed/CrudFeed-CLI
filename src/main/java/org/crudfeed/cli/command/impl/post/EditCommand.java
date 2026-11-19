@@ -30,7 +30,7 @@ public class EditCommand implements Command {
         String postId = credentials[0];
         String content = credentials[1];
 
-        postHandler.editPost(postId, content);
+        postHandler.editPost(Long.parseLong(postId), content);
 
 
     }

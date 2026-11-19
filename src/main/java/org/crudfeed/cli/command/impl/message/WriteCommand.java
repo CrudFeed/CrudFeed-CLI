@@ -33,7 +33,7 @@ public class WriteCommand implements Command {
         String receiverId = credentials[0];
         String content = credentials[1];
 
-        messageHandler.writeMessage(receiverId, content);
+        messageHandler.writeMessage(Long.parseLong(receiverId), content);
 
     }
 }

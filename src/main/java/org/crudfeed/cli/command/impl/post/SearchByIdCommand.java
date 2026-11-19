@@ -23,7 +23,7 @@ public class SearchByIdCommand implements Command {
         if (input.isEmpty()) {println("Usage - search -i [id]"); return;}
 
 
-        println(postCardCreator.createPostCard(postHandler.searchPostById(argument)));
+        println(postCardCreator.createPostCard(postHandler.searchPostById(Long.parseLong(argument))));
 
     }
 }

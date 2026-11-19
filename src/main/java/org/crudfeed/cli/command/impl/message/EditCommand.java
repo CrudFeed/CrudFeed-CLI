@@ -30,7 +30,7 @@ public class EditCommand implements Command {
         String messageId = credentials[0];
         String content = credentials[1];
 
-        messageHandler.editMessage(messageId, content);
+        messageHandler.editMessage(Long.parseLong(messageId), content);
 
 
     }

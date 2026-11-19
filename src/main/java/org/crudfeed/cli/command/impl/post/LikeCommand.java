@@ -20,6 +20,6 @@ public class LikeCommand implements Command {
 
         if (input.isEmpty()) {println("Usage - like [id]"); return;}
 
-        postHandler.likePost(input);
+        postHandler.likePost(Long.parseLong(input));
     }
 }

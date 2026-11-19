@@ -20,6 +20,6 @@ public class DislikeCommand implements Command {
 
         if (input.isEmpty()) {println("Usage - dislike [id]"); return;}
 
-        postHandler.disLikePost(input);
+        postHandler.dislikePost(Long.parseLong(input));
     }
 }

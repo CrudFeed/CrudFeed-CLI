@@ -1,7 +1,6 @@
 package org.crudfeed.cli.command.impl.account;
 
 import org.crudfeed.cli.command.Command;
-import org.crudfeed.core.entity.Session;
 import org.crudfeed.cli.handler.AccountHandler;
 
 import static java.lang.IO.*;
@@ -9,7 +8,6 @@ import static java.lang.IO.*;
 public class LoginCommand implements Command {
 
     private final AccountHandler accountHandler = AccountHandler.getINSTANCE();
-    private final Session session = Session.getINSTANCE();
 
     @Override
     public String getName() {
@@ -21,21 +19,21 @@ public class LoginCommand implements Command {
         String input = argument.trim();
 
         if (input.isEmpty()) {
-            println("Usage - login [name] [password]");
+            println("Usage - login [email] [password]");
             return;
         }
 
         String[] credentials = input.split("\\s+", 2);
 
         if (credentials.length < 2) {
-            println("Missing argument. Usage - login [name] [password]");
+            println("Missing argument. Usage - login [email] [password]");
             return;
         }
 
-        String nickname = credentials[0];
+        String email = credentials[0];
         String password = credentials[1];
 
-        accountHandler.signIn(nickname, password);
+        accountHandler.signIn(email, password);
 
     }
 }

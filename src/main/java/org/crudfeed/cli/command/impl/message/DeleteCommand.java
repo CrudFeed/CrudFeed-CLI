@@ -13,5 +13,5 @@ public class DeleteCommand implements Command {
     }
 
     @Override
-    public void execute(String argument) { messageHandler.deleteMessage(argument); }
+    public void execute(String argument) { messageHandler.deleteMessage(Long.parseLong(argument)); }
 }
