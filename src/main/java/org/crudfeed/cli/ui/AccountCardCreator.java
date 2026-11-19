@@ -1,26 +1,43 @@
 package org.crudfeed.cli.ui;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.crudfeed.core.entity.User;
+
+import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountCardCreator {
 
     @Getter
     private static final AccountCardCreator INSTANCE = new AccountCardCreator();
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public String createAccountCard(String response) {
-        if (response.equals("EMPTY")) {
+    public String createAccountCard(String jsonResponse) {
+        if (jsonResponse == null || jsonResponse.isBlank() || jsonResponse.startsWith("Error")) {
             return "The page is empty!";
         }
 
-        String[] user = response.split("\\|", -1);
+        try {
+            User user = objectMapper.readValue(jsonResponse, User.class);
 
-        return "\nID: " + user[0] +
-                "\nNickname: " + user[1] +
-                "\nSubscribers: " + user[2] +
-                "\nSubscriptions: " + user[3] +
-                "\nBio: " + user[4];
+            String lastSeen = user.getLastSeen() != null ? user.getLastSeen().format(dateFormatter) : "N/A";
+            String createdAt = user.getCreatedAt() != null ? user.getUpdatedAt().format(dateFormatter) : "N/A";
+
+            return "ID: " + user.getId() +
+                    "\nName: " + user.getNickname() +
+                    "\nSubscribers: " + "IN REWORK" +
+                    "\nSubscriptions: " + "IN REWORK" +
+                    "\nBio: " + user.getBio() +
+                    "\nLast seen: " + lastSeen +
+                    "\nCreated at: " + createdAt +
+                    "\n";
+        } catch (Exception e) {
+            return "Failed to parse page: " + e.getMessage();
+        }
     }
 }
