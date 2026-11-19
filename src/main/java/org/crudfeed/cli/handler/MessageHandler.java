@@ -3,8 +3,9 @@ package org.crudfeed.cli.handler;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crudfeed.core.entity.Session;
+import org.crudfeed.cli.session.Session;
 import org.crudfeed.cli.network.ResponseClient;
+import org.crudfeed.core.dto.*;
 
 import static java.lang.IO.*;
 
@@ -17,30 +18,39 @@ public class MessageHandler {
     private final Session session = Session.getINSTANCE();
     private final ResponseClient api = ResponseClient.getINSTANCE();
 
-    public void writeMessage(String receiverId, String content) {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
-            String response = api.sendRequest("writeMessage|" + currentUserId + "|" + receiverId + "|" + content);
-
-            println(response);
-        } else {
+    public void writeMessage(long receiverId, String content) {
+        if (!session.isLoggedIn()) {
             println("You are not logged in!");
+            return;
         }
+
+        long currentUserId = session.getCurrentUser().getId();
+
+        WriteMessageRequestDto dto = new WriteMessageRequestDto(currentUserId, receiverId, content);
+
+        String response = api.sendPost("writeMessage", dto);
+        println(response);
     }
 
     public String viewMessages(String receiverNickname) {
         if (session.isLoggedIn()) {
             long currentUserId = session.getCurrentUser().getId();
-            return  api.sendRequest("viewMessages|" + currentUserId + "|" + receiverNickname);
+
+            ViewMessagesRequestDto dto = new ViewMessagesRequestDto(currentUserId, receiverNickname);
+
+            return  api.sendPost("viewMessages", dto);
         } else {
             return "You are not logged in!";
         }
     }
 
-    public void editMessage(String messageId, String content) {
+    public void editMessage(long messageId, String content) {
         if (session.isLoggedIn()) {
             long currentUserId = session.getCurrentUser().getId();
-            String response = api.sendRequest("editMessage|" + currentUserId + "|" + messageId + "|" + content);
+
+            EditMessageRequestDto dto = new EditMessageRequestDto(currentUserId, messageId, content);
+
+            String response = api.sendPost("editMessage", dto);
 
             println(response);
         } else {
@@ -48,10 +58,13 @@ public class MessageHandler {
         }
     }
 
-    public void deleteMessage(String messageId) {
+    public void deleteMessage(long messageId) {
         if (session.isLoggedIn()) {
             long currentUserId = session.getCurrentUser().getId();
-            String response = api.sendRequest("deleteMessage|" + currentUserId + "|" + messageId);
+
+            DeleteMessageRequestDto dto = new DeleteMessageRequestDto(currentUserId, messageId);
+
+            String response = api.sendPost("deleteMessage", dto);
 
             println(response);
         } else {

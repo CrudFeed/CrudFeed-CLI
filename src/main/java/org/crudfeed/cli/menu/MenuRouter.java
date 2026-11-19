@@ -3,13 +3,10 @@ package org.crudfeed.cli.menu;
 import org.crudfeed.cli.command.Command;
 import org.crudfeed.cli.command.impl.account.AccountCommand;
 import org.crudfeed.cli.command.impl.post.PostCommand;
-import org.crudfeed.cli.command.impl.system.StatusCommand;
-import org.crudfeed.cli.command.impl.system.WhoamiCommand;
+import org.crudfeed.cli.command.impl.system.*;
 import org.crudfeed.cli.command.impl.message.MessageCommand;
-import org.crudfeed.cli.command.impl.post.*;
-import org.crudfeed.cli.command.impl.system.HelpCommand;
-import org.crudfeed.cli.command.impl.system.QuitCommand;
-import org.crudfeed.core.entity.Session;
+import org.crudfeed.cli.network.UpdateClient;
+import org.crudfeed.cli.session.Session;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +16,7 @@ import static java.lang.IO.*;
 public class MenuRouter {
 
     private final Session session = Session.getINSTANCE();
+    private final UpdateClient updateClient = UpdateClient.getINSTANCE();
 
     private final Map<String, Command> commands = new HashMap<>();
 
@@ -44,34 +42,41 @@ public class MenuRouter {
         commands.put("h", helpCommand);
 
         // Status
-        Command statCmd = new StatusCommand();
-        register(statCmd);
-        commands.put("stat", statCmd);
+        Command statCommand = new StatusCommand();
+        register(statCommand);
+        commands.put("stat", statCommand);
 
         // Whoami
-        Command wmCmd = new WhoamiCommand();
-        register(wmCmd);
-        commands.put("wm", wmCmd);
+        Command wmCommand = new WhoamiCommand();
+        register(wmCommand);
+        commands.put("wm", wmCommand);
+
+        // Change server
+        Command changeServerCommand = new ChangeServerCommand();
+        register(changeServerCommand);
+        commands.put("cs", changeServerCommand);
 
         // Quit
-        Command quitCmd = new QuitCommand();
-        register(quitCmd);
-        commands.put("q", quitCmd);
+        Command quitCommand = new QuitCommand();
+        register(quitCommand);
+        commands.put("q", quitCommand);
     }
 
     public void run() {
 
         //Type of ASCII art: STANDARD
         String asciiArt = """
-                   ____                _ _____             _    ____ _     ___   ____         ___ \s
-                  / ___|_ __ _   _  __| |  ___|__  ___  __| |  / ___| |   |_ _| |___ \\       / _ \\\s
-                 | |   | '__| | | |/ _` | |_ / _ \\/ _ \\/ _` | | |   | |    | |    __) |     | | | |
-                 | |___| |  | |_| | (_| |  _|  __/  __/ (_| | | |___| |___ | |   / __/   _  | |_| |
-                  \\____|_|   \\__,_|\\__,_|_|  \\___|\\___|\\__,_|  \\____|_____|___| |_____| (_)  \\___/\s
+                  ____                _ _____             _    ____ _     ___   _____        ___ \s
+                 / ___|_ __ _   _  __| |  ___|__  ___  __| |  / ___| |   |_ _| |___ /       / _ \\\s
+                | |   | '__| | | |/ _` | |_ / _ \\/ _ \\/ _` | | |   | |    | |    |_ \\      | | | |
+                | |___| |  | |_| | (_| |  _|  __/  __/ (_| | | |___| |___ | |   ___) |  _  | |_| |
+                 \\____|_|   \\__,_|\\__,_|_|  \\___|\\___|\\__,_|  \\____|_____|___| |____/  (_)  \\___/\s
                 
                 """;
 
         println(asciiArt);
+
+        updateClient.checkAndDownload();
 
         // Main
         while (!session.isExit()) {

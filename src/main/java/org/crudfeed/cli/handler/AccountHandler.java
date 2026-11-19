@@ -3,8 +3,9 @@ package org.crudfeed.cli.handler;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crudfeed.core.entity.Session;
+import org.crudfeed.cli.session.Session;
 import org.crudfeed.cli.network.ResponseClient;
+import org.crudfeed.core.dto.*;
 
 import static java.lang.IO.*;
 
@@ -17,98 +18,144 @@ public class AccountHandler {
     private final Session session = Session.getINSTANCE();
     private final ResponseClient api = ResponseClient.getINSTANCE();
 
-    public boolean signUp(String nickname, String password) { return authenticate("signUp", nickname, password); }
-
-    public boolean signIn(String nickname, String password) { return authenticate("signIn", nickname, password); }
-
-    private boolean authenticate(String action, String nickname, String password) {
+    public void signUp(String email, String nickname, String displayName, String password) {
         if (session.isLoggedIn()) {
             println("You are already logged in as @" + session.getCurrentUser().getNickname() + "!");
-            return false;
         }
 
         println("Connecting to CrudFeed CLI...");
 
         try {
-            String response = api.sendRequest(action + "|" + nickname + "|" + password);
+            SignUpRequestDto dto = new SignUpRequestDto(email, nickname, displayName, password);
+
+            String response = api.sendPost("sign-up", dto);
 
             if (response.startsWith("Error")) {
                 System.out.println(response);
-                return false;
+                return;
             }
 
             session.login(api.parseUser(response));
             println("Successfully logged in as @" + session.getCurrentUser().getNickname() + "!");
-            return true;
 
         } catch (Exception e) {
             println("Connection error: " + e.getMessage());
-            return false;
+        }
+    }
+
+    public void signIn(String email, String password) {
+        if (session.isLoggedIn()) {
+            println("You are already logged in as @" + session.getCurrentUser().getNickname() + "!");
+        }
+
+        println("Connecting to CrudFeed CLI...");
+
+        try {
+            SignInRequestDto dto = new SignInRequestDto(email, password);
+
+            String response = api.sendPost("sign-in", dto);
+
+            if (response.startsWith("Error")) {
+                System.out.println(response);
+                return;
+            }
+
+            session.login(api.parseUser(response));
+            println("Successfully logged in as @" + session.getCurrentUser().getNickname() + "!");
+
+        } catch (Exception e) {
+            println("Connection error: " + e.getMessage());
         }
     }
 
     public void status() {
-        String response = api.sendRequest("status");
+        String response = api.sendGet("status");
 
-        if (response.contains("ONLINE")) {
-            println(response);
-        } else {
-            println("Server status: OFFLINE");
-        }
+        println("Server status: " + response);
+
+        println("Server URL: " + ResponseClient.getBaseUrl());
 
         if (session.isLoggedIn()) {
-            println("You are logged in as: @" + session.getCurrentUser().getNickname() + ".");
+            println("You are logged in as: @" + session.getCurrentUser().getDisplayName() + ".");
+            println("Your display name is: " + session.getCurrentUser().getDisplayName() + ".");
         } else {
             println("Current user status: @Guest" + session.getGuestId() + ".");
-            println("You are not authenticated. Use 'login' or 'reg' command.");
+            println("You are not authenticated. Use 'ac login' or 'ac reg' command.");
         }
+    }
+
+    public void changeServer(String server) {
+        ResponseClient.setBaseUrl(server);
+        println("Changing server status: " + server);
     }
 
     public void whoami() {
         if (session.isLoggedIn()) {
             println("You are logged in as @" + session.getCurrentUser().getNickname() + ".");
+            println("Your display name is: " + session.getCurrentUser().getDisplayName() + ".");
         } else {
             println("Current user status: @Guest" + session.getGuestId());
-            println("You are not authenticated. Use 'login' or 'reg' command.");
+            println("You are not authenticated. Use 'ac login' or 'ac reg' command.");
         }
     }
 
-    public void subscribe(String name) {
+    public void subscribe(String nickname) {
+        if (!session.isLoggedIn()) {
+            println("You are not logged in!");
+            return;
+        }
+
         long currentUserId = session.getCurrentUser().getId();
 
-        if (session.isLoggedIn()) {
-            String response =  api.sendRequest("subscribe" + "|" + currentUserId + "|" + name);
+        SubscribeRequestDto dto = new SubscribeRequestDto(currentUserId, nickname);
 
-            println(response);
-        } else {
-            println("You are not logged in!");
-        }
+        String response = api.sendPost("subscribe", dto);
+
+        println(response);
     }
 
-    public void unSubscribe(String name) {
+    public void unSubscribe(String nickname) {
+        if (!session.isLoggedIn()) {
+            println("You are not logged in!");
+            return;
+        }
+
         long currentUserId = session.getCurrentUser().getId();
 
-        if (session.isLoggedIn()) {
-            String response =  api.sendRequest("unSubscribe" + "|" + currentUserId + "|" + name);
+        SubscribeRequestDto dto = new SubscribeRequestDto(currentUserId, nickname);
 
-            println(response);
-        } else {
-            println("You are not logged in!");
-        }
+        String response = api.sendPost("unsubscribe", dto);
+
+        println(response);
     }
 
-    public String viewAccountPage(String nickname) { return api.sendRequest("viewAccountPage|" + nickname); }
+    public String viewAccountPage(String nickname) {
+        ViewAccountPageRequestDto dto = new ViewAccountPageRequestDto(nickname);
+
+        return api.sendPost("viewAccountPage", dto);
+    }
 
     public void editAccount(String content) {
+        if (!session.isLoggedIn()) {
+            println("You are not logged in!");
+            return;
+        }
+
         long currentUserId = session.getCurrentUser().getId();
-        String response = api.sendRequest("editAccountPage|" + currentUserId + "|" + content);
+
+        EditAccountPageRequestDto dto = new EditAccountPageRequestDto(currentUserId, content);
+
+        String response = api.sendPost("editAccountPage", dto);
 
         println(response);
     }
 
     public void changeNickname(String nickname) {
         long currentUserId = session.getCurrentUser().getId();
-        String response = api.sendRequest("changeName|" + nickname + "|" + currentUserId);
+
+        ChangeNicknameRequestDto dto = new ChangeNicknameRequestDto(currentUserId, nickname);
+
+        String response = api.sendPost("changeNickname", dto);
 
         if (response.contains("successfully")) {
             session.getCurrentUser().setNickname(nickname);
@@ -119,7 +166,10 @@ public class AccountHandler {
 
     public void changePassword(String password) {
         long currentUserId = session.getCurrentUser().getId();
-        String response = api.sendRequest("changePass|" + password + "|" + currentUserId);
+
+        ChangePasswordRequestDto dto = new ChangePasswordRequestDto(currentUserId, password);
+
+        String response = api.sendPost("changePassword", dto);
 
         if (response.contains("successfully")) {
             session.getCurrentUser().setPassword(password);
@@ -129,9 +179,22 @@ public class AccountHandler {
     }
 
     public void deleteAccount() {
+        if (!session.isLoggedIn()) {
+            println("You are not logged in!");
+            return;
+        }
+
+        String confirm = readln("Are you sure you want to delete this account? (y/n): ");
+        if (!confirm.equalsIgnoreCase("y")) {
+            println("Deletion cancelled.");
+            return;
+        }
+
         long currentUserId = session.getCurrentUser().getId();
-        String delete = readln("Are you sure you want to delete this account?");
-        String response = api.sendRequest("deleteAccount|" + delete + "|" + currentUserId);
+
+        AccountIdRequestDto dto = new AccountIdRequestDto(currentUserId);
+
+        String response = api.sendPost("deleteAccount", dto);
 
         if (response.equals("Account successfully deleted!")) {
             session.logout();
@@ -140,5 +203,9 @@ public class AccountHandler {
         println(response);
     }
 
-    public String getNicknameById(String userId) { return api.sendRequest("getUserById|" + userId); }
+    public String getNicknameById(long userId) {
+        AccountIdRequestDto dto = new AccountIdRequestDto(userId);
+
+        return api.sendPost("getUserById", dto);
+    }
 }

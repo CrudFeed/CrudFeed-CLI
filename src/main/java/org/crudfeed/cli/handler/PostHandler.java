@@ -3,8 +3,9 @@ package org.crudfeed.cli.handler;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crudfeed.core.entity.Session;
+import org.crudfeed.cli.session.Session;
 import org.crudfeed.cli.network.ResponseClient;
+import org.crudfeed.core.dto.*;
 
 import static java.lang.IO.*;
 
@@ -20,7 +21,10 @@ public class PostHandler {
     public void createPost(String content) {
         if (session.isLoggedIn()) {
             long currentUserId = session.getCurrentUser().getId();
-            String response = api.sendRequest("createPost|" + currentUserId + "|" + content);
+
+            CreatePostRequestDto dto = new CreatePostRequestDto(currentUserId, content);
+
+            String response = api.sendPost("createPost", dto);
 
             println(response);
         } else {
@@ -28,10 +32,13 @@ public class PostHandler {
         }
     }
 
-    public void editPost(String postId, String content) {
+    public void editPost(long postId, String content) {
         if (session.isLoggedIn()) {
             long currentUserId = session.getCurrentUser().getId();
-            String response = api.sendRequest("editPost|" + postId + "|" + content + "|" + currentUserId);
+
+            EditPostRequestDto dto = new EditPostRequestDto(currentUserId, postId, content);
+
+            String response = api.sendPost("editPost", dto);
 
             println(response);
         } else {
@@ -39,10 +46,13 @@ public class PostHandler {
         }
     }
 
-    public void deletePost(String postId) {
+    public void deletePost(long postId) {
         if (session.isLoggedIn()) {
             long currentUserId = session.getCurrentUser().getId();
-            String response = api.sendRequest("deletePost|" + postId + "|" + currentUserId);
+
+            PostRequestDto dto = new PostRequestDto(currentUserId, postId);
+
+            String response = api.sendPost("deletePost", dto);
 
             println(response);
         }  else {
@@ -51,16 +61,16 @@ public class PostHandler {
     }
 
     public String viewFeed() {
-        return api.sendRequest("viewFeed");
+        return api.sendGet("viewFeed");
     }
 
     public String showUserPostsById() {
         if (session.isLoggedIn()) {
             long currentUserId = session.getCurrentUser().getId();
 
-            return api.sendRequest(
-                    "showUserPostsById|" + currentUserId
-            );
+            AccountIdRequestDto dto = new AccountIdRequestDto(currentUserId);
+
+            return api.sendPost("showUserPostsById", dto);
         }
 
         return "You are not logged in!";
@@ -69,21 +79,33 @@ public class PostHandler {
     public String viewUserLikes() {
         if (session.isLoggedIn()) {
             long currentUserId = session.getCurrentUser().getId();
-            return api.sendRequest("viewUserLikes|" + currentUserId);
+
+            AccountIdRequestDto dto = new AccountIdRequestDto(currentUserId);
+
+            return api.sendPost("viewUserLikes", dto);
         }
         return "You are not logged in!";
     }
 
-    public String searchPostById(String postId) {
-        return api.sendRequest("searchPostById|" + postId);
+    public String searchPostById(long postId) {
+        PostIdRequestDto dto = new PostIdRequestDto(postId);
+
+        return api.sendPost("searchPostById", dto);
     }
 
-    public String searchPostByWords(String content) { return api.sendRequest("searchPostByWords|" + content); }
+    public String searchPostByWords(String content) {
+        PostContentRequestDto dto = new PostContentRequestDto(content);
 
-    public void likePost(String postId) {
+        return api.sendPost("searchPostByWords", dto);
+    }
+
+    public void likePost(long postId) {
         if (session.isLoggedIn()) {
             long currentUserId = session.getCurrentUser().getId();
-            String response = api.sendRequest("likePost|" + postId + "|" + currentUserId);
+
+            PostRequestDto dto = new PostRequestDto(currentUserId, postId);
+
+            String response = api.sendPost("likePost", dto);
 
             println(response);
         } else {
@@ -91,10 +113,13 @@ public class PostHandler {
         }
     }
 
-    public void disLikePost(String postId) {
+    public void dislikePost(long postId) {
         if (session.isLoggedIn()) {
             long currentUserId = session.getCurrentUser().getId();
-            String response = api.sendRequest("disLikePost|" + postId + "|" + currentUserId);
+
+            PostRequestDto dto = new PostRequestDto(currentUserId, postId);
+
+            String response = api.sendPost("dislikePost", dto);
 
             println(response);
         } else {
