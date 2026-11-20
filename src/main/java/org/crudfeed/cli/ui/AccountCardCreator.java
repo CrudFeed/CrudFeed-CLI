@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crudfeed.core.entity.User;
 
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,8 +26,15 @@ public class AccountCardCreator {
         try {
             User user = objectMapper.readValue(jsonResponse, User.class);
 
-            String lastSeen = user.getLastSeen() != null ? user.getLastSeen().format(dateFormatter) : "N/A";
-            String createdAt = user.getCreatedAt() != null ? user.getUpdatedAt().format(dateFormatter) : "N/A";
+            DateTimeFormatter formatter = dateFormatter.withZone(ZoneId.systemDefault());
+
+            String lastSeen = user.getLastSeen() != null
+                    ? formatter.format(user.getLastSeen())
+                    : "N/A";
+
+            String createdAt = user.getCreatedAt() != null
+                    ? formatter.format(user.getCreatedAt())
+                    : "N/A";
 
             return "ID: " + user.getId() +
                     "\nName: " + user.getNickname() +

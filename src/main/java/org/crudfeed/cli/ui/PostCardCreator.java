@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crudfeed.core.entity.Post;
 
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -34,8 +35,15 @@ public class PostCardCreator {
             StringBuilder result = new StringBuilder();
 
             for (Post post : posts) {
-                String createdAt = post.getCreatedAt() != null ? post.getCreatedAt().format(dateFormatter) : "N/A";
-                String updatedAt = post.getUpdatedAt() != null ? post.getUpdatedAt().format(dateFormatter) : "N/A";
+                DateTimeFormatter formatter = dateFormatter.withZone(ZoneId.systemDefault());
+
+                String createdAt = post.getCreatedAt() != null
+                        ? formatter.format(post.getCreatedAt())
+                        : "N/A";
+
+                String updatedAt = post.getUpdatedAt() != null
+                        ? formatter.format(post.getUpdatedAt())
+                        : "N/A";
 
                 result.append("ID: ").append(post.getId())
                         .append("\nAuthor (ID): ").append(post.getUserId())

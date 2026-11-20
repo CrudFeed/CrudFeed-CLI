@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.crudfeed.cli.handler.AccountHandler;
 import org.crudfeed.core.entity.Message;
 
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -30,6 +31,8 @@ public class MessageCardCreator {
         try {
             List<Message> messages = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
 
+            DateTimeFormatter formatter = dateFormatter.withZone(ZoneId.systemDefault());
+
             if (messages.isEmpty()) {
                 return "Messages list is empty.";
             }
@@ -49,13 +52,18 @@ public class MessageCardCreator {
                         : "@" + accountHandler.getNicknameById(receiverId);
 
                 String sentAt = message.getCreatedAt() != null
-                        ? message.getCreatedAt().format(dateFormatter)
+                        ? formatter.format(message.getCreatedAt())
+                        : "N/A";
+
+                String updatedAt = message.getUpdatedAt() != null
+                        ? formatter.format(message.getUpdatedAt())
                         : "N/A";
 
                 result.append("FROM: ").append(sender)
                         .append("\nTO: ").append(receiver)
-                        .append("\nText: ").append(message.getText())
-                        .append("\nDate: ").append(sentAt)
+                        .append("\nText: ").append(message.getContent())
+                        .append("\nSent: ").append(sentAt)
+                        .append("\nUpdated: ").append(updatedAt)
                         .append("\n\n");
             }
 
