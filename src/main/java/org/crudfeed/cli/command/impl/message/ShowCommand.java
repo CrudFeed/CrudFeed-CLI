@@ -27,9 +27,6 @@ public class ShowCommand implements Command {
             return;
         }
 
-        println(messageCardCreator.createMessageCard(
-                messageHandler.viewMessages(argument),
-                session.getCurrentUser().getId())
-        );
+        println(messageCardCreator.createMessageCard(messageHandler.viewMessages(argument), session.getCurrentUser().getId()));
     }
 }
