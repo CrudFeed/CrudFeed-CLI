@@ -5,7 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crudfeed.core.entity.User;
+import org.crudfeed.core.dto.ViewAccountPageRequestDto;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -24,23 +24,23 @@ public class AccountCardCreator {
         }
 
         try {
-            User user = objectMapper.readValue(jsonResponse, User.class);
+            ViewAccountPageRequestDto userInfo = objectMapper.readValue(jsonResponse, ViewAccountPageRequestDto.class);
 
             DateTimeFormatter formatter = dateFormatter.withZone(ZoneId.systemDefault());
 
-            String lastSeen = user.getLastSeen() != null
-                    ? formatter.format(user.getLastSeen())
+            String lastSeen = userInfo.lastSeen() != null
+                    ? formatter.format(userInfo.lastSeen())
                     : "N/A";
 
-            String createdAt = user.getCreatedAt() != null
-                    ? formatter.format(user.getCreatedAt())
+            String createdAt = userInfo.createdAt() != null
+                    ? formatter.format(userInfo.createdAt())
                     : "N/A";
 
-            return "ID: " + user.getId() +
-                    "\nName: " + user.getNickname() +
-                    "\nSubscribers: " + "IN REWORK" +
-                    "\nSubscriptions: " + "IN REWORK" +
-                    "\nBio: " + user.getBio() +
+            return "ID: " + userInfo.id() +
+                    "\nName: " + userInfo.nickname() +
+                    "\nSubscribers: " + userInfo.subscribers() +
+                    "\nSubscriptions: " + userInfo.subscriptions() +
+                    "\nBio: " + userInfo.bio() +
                     "\nLast seen: " + lastSeen +
                     "\nCreated at: " + createdAt +
                     "\n";

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crudfeed.core.entity.Post;
+import org.crudfeed.core.dto.ViewFeedRequestDto;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +26,7 @@ public class PostCardCreator {
         }
 
         try {
-            List<Post> posts = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
+            List<ViewFeedRequestDto> posts = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
 
             if (posts.isEmpty()) {
                 return "Feed is empty.";
@@ -34,21 +34,22 @@ public class PostCardCreator {
 
             StringBuilder result = new StringBuilder();
 
-            for (Post post : posts) {
+            for (ViewFeedRequestDto post : posts) {
                 DateTimeFormatter formatter = dateFormatter.withZone(ZoneId.systemDefault());
 
-                String createdAt = post.getCreatedAt() != null
-                        ? formatter.format(post.getCreatedAt())
+                String createdAt = post.createdAt() != null
+                        ? formatter.format(post.createdAt())
                         : "N/A";
 
-                String updatedAt = post.getUpdatedAt() != null
-                        ? formatter.format(post.getUpdatedAt())
+                String updatedAt = post.updatedAt() != null
+                        ? formatter.format(post.updatedAt())
                         : "N/A";
 
-                result.append("ID: ").append(post.getId())
-                        .append("\nAuthor (ID): ").append(post.getUserId())
-                        .append("\nText: ").append(post.getContent())
-                        .append("\nLikes: IN REWORK")
+                result.append("ID: ").append(post.id())
+                        .append("\nAuthor (ID): ").append(post.authorId())
+                        .append("\nAuthor (NAME): ").append(post.authorName())
+                        .append("\nText: ").append(post.content())
+                        .append("\nLikes: ").append(post.likes())
                         .append("\nCreated at: ").append(createdAt)
                         .append("\nUpdated at: ").append(updatedAt)
                         .append("\n");

@@ -122,7 +122,15 @@ public class AccountHandler {
     }
 
     public String viewAccountPage(String nickname) {
-        ViewAccountPageRequestDto dto = new ViewAccountPageRequestDto(nickname);
+        ViewAccountPageRequestDto dto = new ViewAccountPageRequestDto(
+                0L,
+                nickname,
+                0L,
+                0L,
+                null,
+                null,
+                null
+        );
 
         return api.sendPost("viewAccountPage", dto);
     }
