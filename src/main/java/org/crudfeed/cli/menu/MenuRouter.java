@@ -1,12 +1,15 @@
 package org.crudfeed.cli.menu;
 
 import org.crudfeed.cli.command.Command;
-import org.crudfeed.cli.command.impl.account.AccountCommand;
-import org.crudfeed.cli.command.impl.post.PostCommand;
-import org.crudfeed.cli.command.impl.system.*;
-import org.crudfeed.cli.command.impl.message.MessageCommand;
+import org.crudfeed.cli.command.impl.mod.*;
+import org.crudfeed.cli.command.impl.user.account.AccountCommand;
+import org.crudfeed.cli.command.impl.user.system.*;
+import org.crudfeed.cli.command.impl.user.post.PostCommand;
+import org.crudfeed.cli.command.impl.user.message.MessageCommand;
 import org.crudfeed.cli.network.UpdateClient;
 import org.crudfeed.cli.session.Session;
+import org.crudfeed.core.entity.Role;
+import org.crudfeed.core.entity.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +18,6 @@ import static java.lang.IO.*;
 
 public class MenuRouter {
 
-    private final Session session = Session.getINSTANCE();
     private final UpdateClient updateClient = UpdateClient.getINSTANCE();
 
     private final Map<String, Command> commands = new HashMap<>();
@@ -32,9 +34,14 @@ public class MenuRouter {
         commands.put("p", postCommand);
 
         // Message
-        Command MessageCommand = new MessageCommand();
-        register(MessageCommand);
-        commands.put("msg", MessageCommand);
+        Command messageCommand = new MessageCommand();
+        register(messageCommand);
+        commands.put("msg", messageCommand);
+
+        // Mod
+        Command modCommand = new ModCommand();
+        register(modCommand);
+        commands.put("m", modCommand);
 
         // Help
         Command helpCommand = new HelpCommand();
@@ -78,6 +85,8 @@ public class MenuRouter {
 
         updateClient.checkAndDownload();
 
+        Session session = Session.getINSTANCE();
+
         // Main
         while (!session.isExit()) {
             try {
@@ -90,11 +99,31 @@ public class MenuRouter {
 
                 Command command = commands.get(commandName);
 
-                if (command != null) {
-                    command.execute(argument);
-                } else {
-                    println("Invalid command: " + "\"" + commandName + "\". " + "Type help for list of commands.");
+                User currentUser = session.getCurrentUser();
+
+                if (command == null) {
+                    println("Invalid command: \"" + commandName + "\". Type help for list of commands.");
+                    continue;
                 }
+
+                if (command.requiresAuth() && currentUser == null) {
+                    println("You are not logged in!");
+                    continue;
+                }
+
+                Role required = command.getRequiredRole();
+                if (required != null) {
+                    if (!session.isLoggedIn()) {
+                        println("You are not logged in!");
+                        continue;
+                    }
+                    if (!session.getCurrentUser().getRole().hasAtLeast(required)) {
+                        println("You are not allowed to use this command!");
+                        continue;
+                    }
+                }
+
+                command.execute(argument);
             } catch (Exception e) {
                 println("Something went wrong: " + e.getMessage());
             }

@@ -76,10 +76,11 @@ public class AccountHandler {
         println("Server URL: " + ResponseClient.getBaseUrl());
 
         if (session.isLoggedIn()) {
-            println("You are logged in as: @" + session.getCurrentUser().getDisplayName() + ".");
-            println("Your display name is: " + session.getCurrentUser().getDisplayName() + ".");
+            println("You are logged in as: @" + session.getCurrentUser().getNickname());
+            println("Your display name is: " + session.getCurrentUser().getDisplayName());
+            println("Welcome back!");
         } else {
-            println("Current user status: @Guest" + session.getGuestId() + ".");
+            println("Current user status: @guest" + session.getGuestId());
             println("You are not authenticated. Use 'ac login' or 'ac reg' command.");
         }
     }
@@ -91,20 +92,16 @@ public class AccountHandler {
 
     public void whoami() {
         if (session.isLoggedIn()) {
-            println("You are logged in as @" + session.getCurrentUser().getNickname() + ".");
-            println("Your display name is: " + session.getCurrentUser().getDisplayName() + ".");
+            println("You are logged in as @" + session.getCurrentUser().getNickname());
+            println("Your display name is: " + session.getCurrentUser().getDisplayName());
+            println("Welcome back!");
         } else {
-            println("Current user status: @Guest" + session.getGuestId());
+            println("Current user status: @guest" + session.getGuestId());
             println("You are not authenticated. Use 'ac login' or 'ac reg' command.");
         }
     }
 
     public void subscribe(String nickname) {
-        if (!session.isLoggedIn()) {
-            println("You are not logged in!");
-            return;
-        }
-
         long currentUserId = session.getCurrentUser().getId();
 
         SubscribeRequestDto dto = new SubscribeRequestDto(currentUserId, nickname);
@@ -115,11 +112,6 @@ public class AccountHandler {
     }
 
     public void unSubscribe(String nickname) {
-        if (!session.isLoggedIn()) {
-            println("You are not logged in!");
-            return;
-        }
-
         long currentUserId = session.getCurrentUser().getId();
 
         SubscribeRequestDto dto = new SubscribeRequestDto(currentUserId, nickname);
@@ -136,11 +128,6 @@ public class AccountHandler {
     }
 
     public void editAccount(String content) {
-        if (!session.isLoggedIn()) {
-            println("You are not logged in!");
-            return;
-        }
-
         long currentUserId = session.getCurrentUser().getId();
 
         EditAccountPageRequestDto dto = new EditAccountPageRequestDto(currentUserId, content);
@@ -179,11 +166,6 @@ public class AccountHandler {
     }
 
     public void deleteAccount() {
-        if (!session.isLoggedIn()) {
-            println("You are not logged in!");
-            return;
-        }
-
         String confirm = readln("Are you sure you want to delete this account? (y/n): ");
         if (!confirm.equalsIgnoreCase("y")) {
             println("Deletion cancelled.");
@@ -207,5 +189,39 @@ public class AccountHandler {
         AccountIdRequestDto dto = new AccountIdRequestDto(userId);
 
         return api.sendPost("getUserById", dto);
+    }
+
+    public void modBanAccount(long userId) {
+        if (userId < 1) {
+            println("User ID cannot be empty!");
+            return;
+        }
+
+        String confirm = readln("Are you sure you want to ban this account? (y/n): ");
+
+        if (!confirm.equalsIgnoreCase("y")) {
+            println("Ban cancelled.");
+            return;
+        }
+
+        String response = api.sendPost("modBanAccount", userId);
+        println(response);
+    }
+
+    public void modUnbanAccount(long userId) {
+        if (userId < 1) {
+            println("User ID cannot be empty!");
+            return;
+        }
+
+        String confirm = readln("Are you sure you want to unban this account? (y/n): ");
+
+        if (!confirm.equalsIgnoreCase("y")) {
+            println("Unban cancelled.");
+            return;
+        }
+
+        String response = api.sendPost("modUnbanAccount", userId);
+        println(response);
     }
 }
