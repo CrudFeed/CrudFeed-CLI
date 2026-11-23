@@ -255,8 +255,8 @@ public class AccountHandler {
         return api.sendPost("getUserById", dto);
     }
 
-    public void modBanAccount(long userId) {
-        if (userId < 1) {
+    public void modBanAccount(long modId, long targetId) {
+        if (targetId < 0) {
             println("User ID cannot be empty!");
             return;
         }
@@ -268,12 +268,14 @@ public class AccountHandler {
             return;
         }
 
-        String response = api.sendPost("modBanAccount", userId);
+        ModBanAccountDtoRequest dto = new ModBanAccountDtoRequest(modId, targetId);
+
+        String response = api.sendPost("modBanAccount", dto);
         println(response);
     }
 
-    public void modUnbanAccount(long userId) {
-        if (userId < 1) {
+    public void modUnbanAccount(long modId, long targetId) {
+        if (targetId < 0) {
             println("User ID cannot be empty!");
             return;
         }
@@ -285,7 +287,9 @@ public class AccountHandler {
             return;
         }
 
-        String response = api.sendPost("modUnbanAccount", userId);
+        ModUnbanAccountDtoRequest dto = new ModUnbanAccountDtoRequest(modId, targetId);
+
+        String response = api.sendPost("modUnbanAccount", dto);
         println(response);
     }
 }
