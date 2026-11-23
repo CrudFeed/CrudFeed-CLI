@@ -1,13 +1,16 @@
 package org.crudfeed.cli.menu;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.crudfeed.cli.command.Command;
 import org.crudfeed.cli.command.impl.mod.*;
 import org.crudfeed.cli.command.impl.user.account.AccountCommand;
 import org.crudfeed.cli.command.impl.user.system.*;
 import org.crudfeed.cli.command.impl.user.post.PostCommand;
 import org.crudfeed.cli.command.impl.user.message.MessageCommand;
+import org.crudfeed.cli.handler.AccountHandler;
 import org.crudfeed.cli.network.UpdateClient;
 import org.crudfeed.cli.session.Session;
+import org.crudfeed.core.dto.GetBannedDtoRequest;
 import org.crudfeed.core.entity.Role;
 import org.crudfeed.core.entity.User;
 
@@ -19,6 +22,7 @@ import static java.lang.IO.*;
 public class MenuRouter {
 
     private final UpdateClient updateClient = UpdateClient.getINSTANCE();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Map<String, Command> commands = new HashMap<>();
 
@@ -86,6 +90,7 @@ public class MenuRouter {
         updateClient.checkAndDownload();
 
         Session session = Session.getINSTANCE();
+        AccountHandler accountHandler = AccountHandler.getINSTANCE();
 
         // Main
         while (!session.isExit()) {
@@ -104,6 +109,21 @@ public class MenuRouter {
                 if (command == null) {
                     println("Invalid command: \"" + commandName + "\". Type help for list of commands.");
                     continue;
+                }
+
+                if (session.isLoggedIn()) {
+                    try {
+                        String isBanned = accountHandler.getBanned(session.getCurrentUser().getId());
+                        GetBannedDtoRequest userInfo = objectMapper.readValue(isBanned, GetBannedDtoRequest.class);
+
+                        if (userInfo.banned()) {
+                            session.logout();
+                            println("Your account has been banned. You have been logged out.");
+                            continue;
+                        }
+                    } catch (Exception e) {
+                        println("Something went wrong: " + e.getMessage());
+                    }
                 }
 
                 if (command.requiresAuth() && currentUser == null) {

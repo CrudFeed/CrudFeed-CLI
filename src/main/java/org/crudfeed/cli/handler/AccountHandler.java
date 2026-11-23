@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.crudfeed.cli.session.Session;
 import org.crudfeed.cli.network.ResponseClient;
 import org.crudfeed.core.dto.*;
+import org.crudfeed.core.entity.User;
 
 import static java.lang.IO.*;
 
@@ -21,6 +22,7 @@ public class AccountHandler {
     public void signUp(String email, String nickname, String displayName, String password) {
         if (session.isLoggedIn()) {
             println("You are already logged in as @" + session.getCurrentUser().getNickname() + "!");
+            return;
         }
 
         println("Connecting to CrudFeed CLI...");
@@ -30,12 +32,36 @@ public class AccountHandler {
 
             String response = api.sendPost("sign-up", dto);
 
-            if (response.startsWith("Error")) {
-                System.out.println(response);
+            if (response == null || response.startsWith("Error")) {
+                println(response != null ? response : "Error: Empty response from server");
                 return;
             }
 
-            session.login(api.parseUser(response));
+            AuthResultDto result = api.parseUser(response);
+            if (result == null) {
+                println("Error: Failed to parse auth response.");
+                return;
+            }
+
+            if (!result.ok()) {
+                println("Error: " + result.error());
+                return;
+            }
+
+            UserResponseDto userDto = result.user();
+            if (userDto == null) {
+                println("Error: Missing user data in response.");
+                return;
+            }
+
+            User user = new User();
+            user.setId(userDto.id());
+            user.setEmail(userDto.email());
+            user.setNickname(userDto.nickname());
+            user.setDisplayName(userDto.displayName());
+            user.setRole(userDto.role());
+
+            session.login(user);
             println("Successfully logged in as @" + session.getCurrentUser().getNickname() + "!");
 
         } catch (Exception e) {
@@ -46,6 +72,7 @@ public class AccountHandler {
     public void signIn(String email, String password) {
         if (session.isLoggedIn()) {
             println("You are already logged in as @" + session.getCurrentUser().getNickname() + "!");
+            return;
         }
 
         println("Connecting to CrudFeed CLI...");
@@ -55,17 +82,46 @@ public class AccountHandler {
 
             String response = api.sendPost("sign-in", dto);
 
-            if (response.startsWith("Error")) {
-                System.out.println(response);
+            if (response == null || response.startsWith("Error")) {
+                println(response != null ? response : "Error: Empty response from server");
                 return;
             }
 
-            session.login(api.parseUser(response));
+            AuthResultDto result = api.parseUser(response);
+            if (result == null) {
+                println("Error: Failed to parse auth response.");
+                return;
+            }
+
+            if (!result.ok()) {
+                println("Error: " + result.error());
+                return;
+            }
+
+            UserResponseDto userDto = result.user();
+            if (userDto == null) {
+                println("Error: Missing user data in response.");
+                return;
+            }
+
+            User user = new User();
+            user.setId(userDto.id());
+            user.setEmail(userDto.email());
+            user.setNickname(userDto.nickname());
+            user.setDisplayName(userDto.displayName());
+            user.setRole(userDto.role());
+
+            session.login(user);
             println("Successfully logged in as @" + session.getCurrentUser().getNickname() + "!");
 
         } catch (Exception e) {
             println("Connection error: " + e.getMessage());
         }
+    }
+
+    public String getBanned(long userId) {
+        GetBannedDtoRequest dto = new GetBannedDtoRequest(userId, false);
+        return api.sendPost("getBanned", dto);
     }
 
     public void status() {

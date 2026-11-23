@@ -81,12 +81,18 @@ public class ResponseClient {
         return response.body();
     }
 
-    public User parseUser(String jsonResponse) {
+    public AuthResultDto parseUser(String jsonResponse) {
+        if (jsonResponse == null || jsonResponse.isBlank()) {
+            return null;
+        }
+        String trimmed = jsonResponse.trim();
+        if (!trimmed.startsWith("{")) {
+            return null;
+        }
         try {
-            return objectMapper.readValue(jsonResponse, User.class);
+            return objectMapper.readValue(trimmed, AuthResultDto.class);
         } catch (Exception e) {
             System.err.println("JSON parse error: " + e.getMessage());
-            e.printStackTrace();
             return null;
         }
     }
