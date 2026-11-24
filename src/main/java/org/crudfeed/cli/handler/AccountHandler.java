@@ -157,6 +157,38 @@ public class AccountHandler {
         }
     }
 
+    public void addOrRemoveFriend(long userId, String friendName, String action) {
+        if (userId <= 0 || friendName == null || friendName.isBlank()) {
+            println("Error: Invalid user id or friend name.");
+            return;
+        }
+
+        if (action == null || action.isBlank()) {
+            println("Error: Invalid action.");
+            return;
+        }
+
+        String response = "";
+        String actionLowerCase = action.toLowerCase();
+        FriendRequestDto dto = new FriendRequestDto(userId, friendName);
+
+        if (actionLowerCase.equals("add")) {
+            response = api.sendPost("addFriend", dto);
+        } else if (actionLowerCase.equals("remove")) {
+            response = api.sendPost("removeFriend", dto);
+        } else {
+            println("Error: Invalid action.");
+        }
+
+        println(response);
+    }
+
+    public String showFriendsList(long userId, long friendId, String friendName, boolean confirmed) {
+        ShowFriendsListRequestDto dto = new ShowFriendsListRequestDto(userId, friendId, friendName);
+
+        return api.sendPost("showFriendsList", dto);
+    }
+
     public void subscribe(String nickname) {
         long currentUserId = session.getCurrentUser().getId();
 

@@ -28,6 +28,15 @@ public class AccountCommand implements Command {
         subCommands.put("registration", new RegistrationCommand());
         subCommands.put("reg", subCommands.get("registration"));
 
+        subCommands.put("add-friend", new AddFriendCommand());
+        subCommands.put("af", subCommands.get("add-friend"));
+
+        subCommands.put("remove-friend", new RemoveFriendCommand());
+        subCommands.put("rf", subCommands.get("remove-friend"));
+
+        subCommands.put("friends", new ShowFriendsListCommand());
+        subCommands.put("lf", subCommands.get("friends"));
+
         subCommands.put("logout", new LogoutCommand());
         subCommands.put("edit", new EditCommand());
         subCommands.put("delete", new DeleteCommand());
