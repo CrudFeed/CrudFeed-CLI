@@ -37,7 +37,7 @@ public class AccountHandler {
                 return;
             }
 
-            AuthResultDto result = api.parseUser(response);
+            AuthResultResponseDto result = api.parseUser(response);
             if (result == null) {
                 println("Error: Failed to parse auth response.");
                 return;
@@ -87,7 +87,7 @@ public class AccountHandler {
                 return;
             }
 
-            AuthResultDto result = api.parseUser(response);
+            AuthResultResponseDto result = api.parseUser(response);
             if (result == null) {
                 println("Error: Failed to parse auth response.");
                 return;
@@ -120,7 +120,7 @@ public class AccountHandler {
     }
 
     public String getBanned(long userId) {
-        GetBannedDtoRequest dto = new GetBannedDtoRequest(userId, false);
+        GetBannedRequestDto dto = new GetBannedRequestDto(userId, false);
         return api.sendPost("getBanned", dto);
     }
 

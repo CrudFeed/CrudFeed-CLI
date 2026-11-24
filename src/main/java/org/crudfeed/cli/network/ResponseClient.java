@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.crudfeed.core.dto.*;
-import org.crudfeed.core.entity.User;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -81,7 +80,7 @@ public class ResponseClient {
         return response.body();
     }
 
-    public AuthResultDto parseUser(String jsonResponse) {
+    public AuthResultResponseDto parseUser(String jsonResponse) {
         if (jsonResponse == null || jsonResponse.isBlank()) {
             return null;
         }
@@ -90,7 +89,7 @@ public class ResponseClient {
             return null;
         }
         try {
-            return objectMapper.readValue(trimmed, AuthResultDto.class);
+            return objectMapper.readValue(trimmed, AuthResultResponseDto.class);
         } catch (Exception e) {
             System.err.println("JSON parse error: " + e.getMessage());
             return null;
