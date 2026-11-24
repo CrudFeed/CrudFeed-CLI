@@ -1,7 +1,7 @@
-package org.crudfeed.cli.command.impl.mod;
+package org.crudfeed.cli.command.impl.mod.account;
 
 import org.crudfeed.cli.command.Command;
-import org.crudfeed.cli.handler.AccountHandler;
+import org.crudfeed.cli.handler.ModHandler;
 import org.crudfeed.cli.session.Session;
 import org.crudfeed.core.entity.Role;
 
@@ -9,7 +9,7 @@ import static java.lang.IO.println;
 
 public class ModUnbanCommand implements Command {
 
-    private final AccountHandler accountHandler = AccountHandler.getINSTANCE();
+    private final ModHandler modHandler = ModHandler.getINSTANCE();
 
     @Override
     public String getName() {
@@ -33,6 +33,13 @@ public class ModUnbanCommand implements Command {
             return;
         }
 
-        accountHandler.modUnbanAccount(Session.getINSTANCE().getCurrentUser().getId(), Long.parseLong(argument));
+        modHandler.modAction(
+                Session.getINSTANCE().getCurrentUser().getId(),
+                Long.parseLong(argument),
+                "modUnbanAccount",
+                "user",
+                "unban this account",
+                "Unban cancelled."
+        );
     }
 }
