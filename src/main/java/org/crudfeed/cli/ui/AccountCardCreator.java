@@ -36,7 +36,7 @@ public class AccountCardCreator {
                     ? formatter.format(userInfo.createdAt())
                     : "N/A";
 
-            return "ID: " + userInfo.id() +
+            return "\nID: " + userInfo.id() +
                     "\nName: " + userInfo.nickname() +
                     "\nSubscribers: " + userInfo.subscribers() +
                     "\nSubscriptions: " + userInfo.subscriptions() +

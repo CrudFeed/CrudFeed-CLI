@@ -45,7 +45,7 @@ public class PostCardCreator {
                         ? formatter.format(post.updatedAt())
                         : "N/A";
 
-                result.append("ID: ").append(post.id())
+                result.append("\nPost ID: ").append(post.id())
                         .append("\nAuthor (ID): ").append(post.authorId())
                         .append("\nAuthor (NAME): ").append(post.authorName())
                         .append("\nText: ").append(post.content())

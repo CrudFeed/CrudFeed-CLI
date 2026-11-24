@@ -59,12 +59,12 @@ public class MessageCardCreator {
                         ? formatter.format(message.getUpdatedAt())
                         : "N/A";
 
-                result.append("FROM: ").append(sender)
+                result.append("\nFROM: ").append(sender)
                         .append("\nTO: ").append(receiver)
                         .append("\nText: ").append(message.getContent())
                         .append("\nSent: ").append(sentAt)
                         .append("\nUpdated: ").append(updatedAt)
-                        .append("\n\n");
+                        .append("\n");
             }
 
             return result.toString();
