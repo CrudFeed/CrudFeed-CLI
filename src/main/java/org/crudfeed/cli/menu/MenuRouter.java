@@ -8,7 +8,6 @@ import org.crudfeed.cli.command.impl.user.system.*;
 import org.crudfeed.cli.command.impl.user.post.PostCommand;
 import org.crudfeed.cli.command.impl.user.message.MessageCommand;
 import org.crudfeed.cli.handler.AccountHandler;
-import org.crudfeed.cli.network.UpdateClient;
 import org.crudfeed.cli.session.Session;
 import org.crudfeed.core.dto.GetBannedRequestDto;
 import org.crudfeed.core.entity.Role;
@@ -21,10 +20,13 @@ import static java.lang.IO.*;
 
 public class MenuRouter {
 
-    private final UpdateClient updateClient = UpdateClient.getINSTANCE();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Map<String, Command> commands = new HashMap<>();
+
+    private static final String VERSION = "3.0";
+    private static final String WEB_URL = "https://crudfeed.github.io/";
+    private static final String RELEASE_URL = "https://github.com/CrudFeed/CrudFeed-CLI/releases";
 
     public MenuRouter() {
         // Create command "account" with alias "ac"
@@ -75,19 +77,20 @@ public class MenuRouter {
 
     public void run() {
 
-        //Type of ASCII art: STANDARD
+        // Type of ASCII art: STANDARD
         String asciiArt = """
-                  ____                _ _____             _    ____ _     ___   _____        ___ \s
-                 / ___|_ __ _   _  __| |  ___|__  ___  __| |  / ___| |   |_ _| |___ /       / _ \\\s
-                | |   | '__| | | |/ _` | |_ / _ \\/ _ \\/ _` | | |   | |    | |    |_ \\      | | | |
-                | |___| |  | |_| | (_| |  _|  __/  __/ (_| | | |___| |___ | |   ___) |  _  | |_| |
-                 \\____|_|   \\__,_|\\__,_|_|  \\___|\\___|\\__,_|  \\____|_____|___| |____/  (_)  \\___/\s
-                
-                """;
+          ____                _ _____             _    ____ _     ___   _____        ___
+         / ___|_ __ _   _  __| |  ___|__  ___  __| |  / ___| |   |_ _| |___ /       / _ \\
+        | |   | '__| | | |/ _` | |_ / _ \\/ _ \\/ _` | | |   | |    | |    |_ \\      | | | |
+        | |___| |  | |_| | (_| |  _|  __/  __/ (_| | | |___| |___ | |   ___) |  _  | |_| |
+         \\____|_|   \\__,_|\\__,_|_|  \\___|\\___|\\__,_|  \\____|_____|___| |____/  (_)  \\___/
+        """;
 
         println(asciiArt);
-
-        updateClient.checkAndDownload();
+        println("Version:  " + VERSION);
+        println("Website:  " + WEB_URL);
+        println("Release:  " + RELEASE_URL);
+        println();
 
         Session session = Session.getINSTANCE();
         AccountHandler accountHandler = AccountHandler.getINSTANCE();
