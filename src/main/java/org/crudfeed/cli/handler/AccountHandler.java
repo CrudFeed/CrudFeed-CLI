@@ -236,9 +236,11 @@ public class AccountHandler {
             return;
         }
 
-        long currentUserId = session.getCurrentUser().getId();
-
-        AccountIdRequestDto dto = new AccountIdRequestDto(currentUserId);
+        DeleteAccountRequestDto dto = new DeleteAccountRequestDto(
+                session.getCurrentUser().getId(),
+                session.getCurrentUser().getEmail(),
+                session.getCurrentUser().getNickname()
+        );
 
         String response = api.sendPost("deleteAccount", dto);
 
