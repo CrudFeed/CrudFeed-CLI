@@ -23,7 +23,7 @@ public class ShowCommand implements Command {
         String input = argument.trim();
 
         if (input.isEmpty()) {
-            println("Usage - show [id]");
+            println("Usage - show [name]");
             return;
         }
 

@@ -30,10 +30,10 @@ public class WriteCommand implements Command {
             return;
         }
 
-        String receiverId = credentials[0];
+        String receiverNickname = credentials[0];
         String content = credentials[1];
 
-        messageHandler.writeMessage(Long.parseLong(receiverId), content);
+        messageHandler.writeMessage(receiverNickname, content);
 
     }
 }

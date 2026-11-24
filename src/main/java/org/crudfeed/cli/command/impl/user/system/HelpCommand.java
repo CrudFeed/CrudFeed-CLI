@@ -45,7 +45,7 @@ public class HelpCommand implements Command {
                 post search -w        / p src -w     [words]                                   - search posts by words
                 
                 >> MESSAGES ----------------------------------------------------------------------------------------------------------------
-                message show          / msg show     [id]                                      - view your messages
+                message show          / msg show     [name]                                    - view your messages
                 message write         / msg write    [name] [text]                             - send direct message
                 message edit          / msg edit     [id] [text]                               - update your message
                 message delete        / msg rm       [id]                                      - delete your message

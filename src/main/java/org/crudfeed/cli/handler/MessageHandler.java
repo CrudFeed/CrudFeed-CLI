@@ -18,7 +18,7 @@ public class MessageHandler {
     private final Session session = Session.getINSTANCE();
     private final ResponseClient api = ResponseClient.getINSTANCE();
 
-    public void writeMessage(long receiverId, String content) {
+    public void writeMessage(String receiverNickname, String content) {
         if (!session.isLoggedIn()) {
             println("You are not logged in!");
             return;
@@ -26,7 +26,7 @@ public class MessageHandler {
 
         long currentUserId = session.getCurrentUser().getId();
 
-        WriteMessageRequestDto dto = new WriteMessageRequestDto(currentUserId, receiverId, content);
+        WriteMessageRequestDto dto = new WriteMessageRequestDto(currentUserId, receiverNickname, content);
 
         String response = api.sendPost("writeMessage", dto);
         println(response);
