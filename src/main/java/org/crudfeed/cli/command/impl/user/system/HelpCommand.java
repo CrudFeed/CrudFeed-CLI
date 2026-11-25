@@ -25,7 +25,8 @@ public class HelpCommand implements Command {
                 account registration      / ac reg       [email] [name] [display name] [pass]      - create new account
                 account logout            / ac logout                                              - logout from account
                 account email             / ac email     [new email]                               - update account email
-                account name              / ac name      [new name]                                - update account name
+                account nickname          / ac nn        [new nickname]                            - update account nickname
+                account display-name      / ac dn        [new display name]                        - update account display name
                 account password          / ac pass      [new pass]                                - update account password
                 account edit              / ac edit      [text]                                    - update your bio
                 account subscribe         / ac sub       [name]                                    - subscribe to user

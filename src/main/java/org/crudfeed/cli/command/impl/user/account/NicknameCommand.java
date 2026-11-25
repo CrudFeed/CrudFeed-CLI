@@ -5,13 +5,13 @@ import org.crudfeed.cli.handler.AccountHandler;
 
 import static java.lang.IO.*;
 
-public class NameCommand implements Command {
+public class NicknameCommand implements Command {
 
     private final AccountHandler accountHandler = AccountHandler.getINSTANCE();
 
     @Override
     public String getName() {
-        return "name";
+        return "nickname";
     }
 
     @Override
@@ -24,7 +24,7 @@ public class NameCommand implements Command {
         String input = argument.trim();
 
         if (input.isEmpty()) {
-            println("Usage - name [new name] ");
+            println("Usage - nickname [new nickname] ");
             return;
         }
 

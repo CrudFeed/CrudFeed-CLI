@@ -196,8 +196,6 @@ public class AccountHandler {
     }
 
     public void editAccount(String content) {
-        long currentUserId = session.getCurrentUser().getId();
-
         EditAccountPageRequestDto dto = new EditAccountPageRequestDto(content);
 
         String response = api.sendPost("editAccountPage", dto);
@@ -206,9 +204,7 @@ public class AccountHandler {
     }
 
     public void changeNickname(String nickname) {
-        long currentUserId = session.getCurrentUser().getId();
-
-        ChangeNicknameRequestDto dto = new ChangeNicknameRequestDto(nickname);
+        ChangeNameRequestDto dto = new ChangeNameRequestDto(nickname);
 
         String response = api.sendPost("changeNickname", dto);
 
@@ -219,9 +215,19 @@ public class AccountHandler {
         println(response);
     }
 
-    public void changePassword(String password) {
-        long currentUserId = session.getCurrentUser().getId();
+    public void changeDisplayName(String nickname) {
+        ChangeNameRequestDto dto = new ChangeNameRequestDto(nickname);
 
+        String response = api.sendPost("changeDisplayName", dto);
+
+        if (response.contains("successfully")) {
+            session.getCurrentUser().setDisplayName(nickname);
+        }
+
+        println(response);
+    }
+
+    public void changePassword(String password) {
         ChangePasswordRequestDto dto = new ChangePasswordRequestDto(password);
 
         String response = api.sendPost("changePassword", dto);

@@ -12,7 +12,12 @@ public class AccountCommand implements Command {
     private final Map<String, Command> subCommands = new HashMap<>();
 
     public AccountCommand() {
-        subCommands.put("name", new NameCommand());
+        subCommands.put("display-name", new DisplayNameCommand());
+        subCommands.put("dn", subCommands.get("display-name"));
+
+        subCommands.put("nickname", new NicknameCommand());
+        subCommands.put("nn", subCommands.get("nickname"));
+
         subCommands.put("password", new PasswordCommand());
         subCommands.put("pass", subCommands.get("password"));
 
