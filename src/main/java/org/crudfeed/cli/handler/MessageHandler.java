@@ -22,26 +22,20 @@ public class MessageHandler {
     private final ResponseClient api = ResponseClient.getINSTANCE();
 
     public void writeMessage(String receiverNickname, String content) {
-        long currentUserId = session.getCurrentUser().getId();
-
-        WriteMessageRequestDto dto = new WriteMessageRequestDto(currentUserId, receiverNickname, content);
+        WriteMessageRequestDto dto = new WriteMessageRequestDto(receiverNickname, content);
 
         String response = api.sendPost("writeMessage", dto);
         println(response);
     }
 
     public String viewMessages(String receiverNickname) {
-        long currentUserId = session.getCurrentUser().getId();
-
-        ViewMessagesRequestDto dto = new ViewMessagesRequestDto(currentUserId, receiverNickname);
+        ViewMessagesRequestDto dto = new ViewMessagesRequestDto(receiverNickname);
 
         return  api.sendPost("viewMessages", dto);
     }
 
     public void editMessage(long messageId, String content) {
-        long currentUserId = session.getCurrentUser().getId();
-
-        EditMessageRequestDto dto = new EditMessageRequestDto(currentUserId, messageId, content);
+        EditMessageRequestDto dto = new EditMessageRequestDto(messageId, content);
 
         String response = api.sendPost("editMessage", dto);
 
@@ -49,9 +43,7 @@ public class MessageHandler {
     }
 
     public void deleteMessage(long messageId) {
-        long currentUserId = session.getCurrentUser().getId();
-
-        DeleteMessageRequestDto dto = new DeleteMessageRequestDto(currentUserId, messageId);
+        DeleteMessageRequestDto dto = new DeleteMessageRequestDto(messageId);
 
         String response = api.sendPost("deleteMessage", dto);
 

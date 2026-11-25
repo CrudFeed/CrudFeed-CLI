@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crudfeed.core.dto.account.ShowFriendsListRequestDto;
+import org.crudfeed.core.dto.account.ShowFriendsListDto;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class FriendsListCardCreator {
         }
 
         try {
-            List<ShowFriendsListRequestDto> friends = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
+            List<ShowFriendsListDto> friends = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
 
             if (friends.isEmpty()) {
                 return "Friends list is empty.";
@@ -30,7 +30,7 @@ public class FriendsListCardCreator {
 
             StringBuilder result = new StringBuilder();
 
-            for (ShowFriendsListRequestDto friend : friends) {
+            for (ShowFriendsListDto friend : friends) {
                 result.append("\nFriend ID: ").append(friend.friendId())
                         .append("\nFriend Name: ").append(friend.friendName())
                         .append("\nConfirmed: IN THE FUTURE")

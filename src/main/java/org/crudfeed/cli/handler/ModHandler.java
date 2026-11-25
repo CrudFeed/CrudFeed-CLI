@@ -41,7 +41,7 @@ public class ModHandler {
             return;
         }
 
-        ModInfoRequestDto dto = new ModInfoRequestDto(modId, targetId);
+        ModInfoRequestDto dto = new ModInfoRequestDto(targetId);
 
         String response = api.sendPost(action, dto);
 
@@ -71,7 +71,7 @@ public class ModHandler {
             return "Show account cancelled.";
         }
 
-        ModInfoRequestDto dto = new ModInfoRequestDto(modId, targetId);
+        ModInfoRequestDto dto = new ModInfoRequestDto(targetId);
 
         return api.sendPost("modShow", dto);
     }

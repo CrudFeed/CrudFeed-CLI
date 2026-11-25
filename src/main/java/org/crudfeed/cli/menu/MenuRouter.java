@@ -9,7 +9,7 @@ import org.crudfeed.cli.command.impl.user.post.PostCommand;
 import org.crudfeed.cli.command.impl.user.message.MessageCommand;
 import org.crudfeed.cli.handler.AccountHandler;
 import org.crudfeed.cli.session.Session;
-import org.crudfeed.core.dto.account.GetBannedRequestDto;
+import org.crudfeed.core.dto.account.GetBannedDto;
 import org.crudfeed.core.entity.Role;
 import org.crudfeed.core.entity.User;
 
@@ -117,7 +117,7 @@ public class MenuRouter {
                 if (session.isLoggedIn()) {
                     try {
                         String isBanned = accountHandler.getBanned(session.getCurrentUser().getId());
-                        GetBannedRequestDto userInfo = objectMapper.readValue(isBanned, GetBannedRequestDto.class);
+                        GetBannedDto userInfo = objectMapper.readValue(isBanned, GetBannedDto.class);
 
                         if (userInfo.banned()) {
                             session.logout();

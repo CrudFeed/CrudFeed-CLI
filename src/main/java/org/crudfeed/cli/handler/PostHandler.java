@@ -20,7 +20,7 @@ public class PostHandler {
     private final ResponseClient api = ResponseClient.getINSTANCE();
 
     public void createPost(String content) {
-        CreatePostRequestDto dto = new CreatePostRequestDto(session.getCurrentUser().getId(), content);
+        CreatePostRequestDto dto = new CreatePostRequestDto(content);
 
         String response = api.sendPost("createPost", dto);
 
@@ -29,7 +29,7 @@ public class PostHandler {
     }
 
     public void editPost(long postId, String content) {
-        EditPostRequestDto dto = new EditPostRequestDto(session.getCurrentUser().getId(), postId, content);
+        EditPostRequestDto dto = new EditPostRequestDto(postId, content);
 
         String response = api.sendPost("editPost", dto);
 
@@ -37,7 +37,7 @@ public class PostHandler {
     }
 
     public void deletePost(long postId) {
-        PostRequestDto dto = new PostRequestDto(session.getCurrentUser().getId(), postId);
+        PostRequestDto dto = new PostRequestDto(postId);
 
         String response = api.sendPost("deletePost", dto);
 
@@ -55,9 +55,7 @@ public class PostHandler {
     }
 
     public String viewUserLikes() {
-        AccountIdRequestDto dto = new AccountIdRequestDto(session.getCurrentUser().getId());
-
-        return api.sendPost("viewUserLikes", dto);
+        return api.sendPost("viewUserLikes", null);
     }
 
     public String searchPostById(long postId) {
@@ -73,7 +71,7 @@ public class PostHandler {
     }
 
     public void likePost(long postId) {
-        PostRequestDto dto = new PostRequestDto(session.getCurrentUser().getId(), postId);
+        PostRequestDto dto = new PostRequestDto(postId);
 
         String response = api.sendPost("likePost", dto);
 
@@ -81,7 +79,7 @@ public class PostHandler {
     }
 
     public void dislikePost(long postId) {
-        PostRequestDto dto = new PostRequestDto(session.getCurrentUser().getId(), postId);
+        PostRequestDto dto = new PostRequestDto(postId);
 
         String response = api.sendPost("dislikePost", dto);
 

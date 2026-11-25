@@ -44,6 +44,7 @@ public class ShowInfoCardCreator {
                     "\nNickname: " + userInfo.nickname() +
                     "\nDisplay name: " + userInfo.displayName() +
                     "\nBio: " + userInfo.bio() +
+                    "\nRole: " + userInfo.role() +
                     "\nAvatar: " + "ONLY IN GUI" +
                     "\nLast seen: " + lastSeen +
                     "\nCreated at: " + createdAt +

@@ -33,41 +33,8 @@ public class AccountHandler {
 
         try {
             SignUpRequestDto dto = new SignUpRequestDto(email, nickname, displayName, password);
-
             String response = api.sendPost("signUp", dto);
-
-            if (response == null || response.startsWith("Error")) {
-                println(response != null ? response : "Error: Empty response from server");
-                return;
-            }
-
-            AuthResultResponseDto result = api.parseUser(response);
-            if (result == null) {
-                println("Error: Failed to parse auth response.");
-                return;
-            }
-
-            if (!result.ok()) {
-                println("Error: " + result.error());
-                return;
-            }
-
-            UserResponseDto userDto = result.user();
-            if (userDto == null) {
-                println("Error: Missing user data in response.");
-                return;
-            }
-
-            User user = new User();
-            user.setId(userDto.id());
-            user.setEmail(userDto.email());
-            user.setNickname(userDto.nickname());
-            user.setDisplayName(userDto.displayName());
-            user.setRole(userDto.role());
-
-            session.login(user);
-            println("Successfully logged in as @" + session.getCurrentUser().getNickname() + "!");
-
+            authenticate(response);
         } catch (Exception e) {
             println("Connection error: " + e.getMessage());
         }
@@ -83,48 +50,55 @@ public class AccountHandler {
 
         try {
             SignInRequestDto dto = new SignInRequestDto(email, password);
-
             String response = api.sendPost("signIn", dto);
-
-            if (response == null || response.startsWith("Error")) {
-                println(response != null ? response : "Error: Empty response from server");
-                return;
-            }
-
-            AuthResultResponseDto result = api.parseUser(response);
-            if (result == null) {
-                println("Error: Failed to parse auth response.");
-                return;
-            }
-
-            if (!result.ok()) {
-                println("Error: " + result.error());
-                return;
-            }
-
-            UserResponseDto userDto = result.user();
-            if (userDto == null) {
-                println("Error: Missing user data in response.");
-                return;
-            }
-
-            User user = new User();
-            user.setId(userDto.id());
-            user.setEmail(userDto.email());
-            user.setNickname(userDto.nickname());
-            user.setDisplayName(userDto.displayName());
-            user.setRole(userDto.role());
-
-            session.login(user);
-            println("Successfully logged in as @" + session.getCurrentUser().getNickname() + "!");
-
+            authenticate(response);
         } catch (Exception e) {
             println("Connection error: " + e.getMessage());
         }
     }
 
+    private void authenticate(String response) {
+        if (response == null || response.startsWith("Error")) {
+            println(response != null ? response : "Error: Empty response from server");
+            return;
+        }
+
+        AuthResultResponseDto result = api.parseUser(response);
+        if (result == null) {
+            println("Error: Failed to parse auth response.");
+            return;
+        }
+
+        if (!result.ok()) {
+            println("Error: " + result.error());
+            return;
+        }
+
+        UserResponseDto userDto = result.user();
+        if (userDto == null) {
+            println("Error: Missing user data in response.");
+            return;
+        }
+
+        String token = api.getLastToken();
+        if (token == null || token.isBlank()) {
+            println("Error: Missing auth token in response.");
+            return;
+        }
+
+        User user = new User();
+        user.setId(userDto.id());
+        user.setEmail(userDto.email());
+        user.setNickname(userDto.nickname());
+        user.setDisplayName(userDto.displayName());
+        user.setRole(userDto.role());
+
+        session.login(user, token);
+        println("Successfully logged in as @" + session.getCurrentUser().getNickname() + "!");
+    }
+
     public String getBanned(long userId) {
-        GetBannedRequestDto dto = new GetBannedRequestDto(userId, false);
+        GetBannedDto dto = new GetBannedDto(userId, false);
         return api.sendPost("getBanned", dto);
     }
 
@@ -174,7 +148,7 @@ public class AccountHandler {
 
         String response = "";
         String actionLowerCase = action.toLowerCase();
-        FriendRequestDto dto = new FriendRequestDto(userId, friendName);
+        FriendRequestDto dto = new FriendRequestDto(friendName);
 
         if (actionLowerCase.equals("add")) {
             response = api.sendPost("addFriend", dto);
@@ -188,21 +162,11 @@ public class AccountHandler {
     }
 
     public String showFriendsList(long userId) {
-        ShowFriendsListRequestDto dto = new ShowFriendsListRequestDto(
-                userId,
-                0,
-                "",
-                false,
-                false
-        );
-
-        return api.sendPost("showFriendsList", dto);
+        return api.sendPost("showFriendsList", null);
     }
 
     public void subscribe(String nickname) {
-        long currentUserId = session.getCurrentUser().getId();
-
-        SubscribeRequestDto dto = new SubscribeRequestDto(currentUserId, nickname);
+        SubscribeRequestDto dto = new SubscribeRequestDto(nickname);
 
         String response = api.sendPost("subscribe", dto);
 
@@ -210,9 +174,7 @@ public class AccountHandler {
     }
 
     public void unSubscribe(String nickname) {
-        long currentUserId = session.getCurrentUser().getId();
-
-        SubscribeRequestDto dto = new SubscribeRequestDto(currentUserId, nickname);
+        SubscribeRequestDto dto = new SubscribeRequestDto(nickname);
 
         String response = api.sendPost("unsubscribe", dto);
 
@@ -220,7 +182,7 @@ public class AccountHandler {
     }
 
     public String viewAccountPage(String nickname) {
-        ViewAccountPageRequestDto dto = new ViewAccountPageRequestDto(
+        ViewAccountPageDto dto = new ViewAccountPageDto(
                 0L,
                 nickname,
                 0L,
@@ -236,7 +198,7 @@ public class AccountHandler {
     public void editAccount(String content) {
         long currentUserId = session.getCurrentUser().getId();
 
-        EditAccountPageRequestDto dto = new EditAccountPageRequestDto(currentUserId, content);
+        EditAccountPageRequestDto dto = new EditAccountPageRequestDto(content);
 
         String response = api.sendPost("editAccountPage", dto);
 
@@ -246,7 +208,7 @@ public class AccountHandler {
     public void changeNickname(String nickname) {
         long currentUserId = session.getCurrentUser().getId();
 
-        ChangeNicknameRequestDto dto = new ChangeNicknameRequestDto(currentUserId, nickname);
+        ChangeNicknameRequestDto dto = new ChangeNicknameRequestDto(nickname);
 
         String response = api.sendPost("changeNickname", dto);
 
@@ -260,7 +222,7 @@ public class AccountHandler {
     public void changePassword(String password) {
         long currentUserId = session.getCurrentUser().getId();
 
-        ChangePasswordRequestDto dto = new ChangePasswordRequestDto(currentUserId, password);
+        ChangePasswordRequestDto dto = new ChangePasswordRequestDto(password);
 
         String response = api.sendPost("changePassword", dto);
 
@@ -279,7 +241,6 @@ public class AccountHandler {
         }
 
         DeleteAccountRequestDto dto = new DeleteAccountRequestDto(
-                session.getCurrentUser().getId(),
                 session.getCurrentUser().getEmail(),
                 session.getCurrentUser().getNickname()
         );

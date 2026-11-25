@@ -5,7 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crudfeed.core.dto.account.ViewAccountPageRequestDto;
+import org.crudfeed.core.dto.account.ViewAccountPageDto;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +24,7 @@ public class AccountCardCreator {
         }
 
         try {
-            ViewAccountPageRequestDto userInfo = objectMapper.readValue(jsonResponse, ViewAccountPageRequestDto.class);
+            ViewAccountPageDto userInfo = objectMapper.readValue(jsonResponse, ViewAccountPageDto.class);
 
             DateTimeFormatter formatter = dateFormatter.withZone(ZoneId.systemDefault());
 
