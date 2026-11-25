@@ -38,11 +38,13 @@ public class AccountCardCreator {
 
             return "\nID: " + userInfo.id() +
                     "\nName: " + userInfo.nickname() +
+                    "\nDisplay name: " + userInfo.displayName() +
+                    "\nRole: " + userInfo.role() +
+                    "\nBio: " + userInfo.bio() +
                     "\nSubscribers: " + userInfo.subscribers() +
                     "\nSubscriptions: " + userInfo.subscriptions() +
-                    "\nBio: " + userInfo.bio() +
-                    "\nLast seen: " + lastSeen +
                     "\nCreated at: " + createdAt +
+                    "\nLast seen: " + lastSeen +
                     "\n";
         } catch (Exception e) {
             return "Failed to parse page: " + e.getMessage();

@@ -34,7 +34,7 @@ public class HelpCommand implements Command {
                 account friends           / ac lf                                                  - show list of friends
                 account add-friend        / ac af        [name]                                    - add new friend
                 account remove-friend     / ac rf        [name]                                    - delete your friend
-                account delete            / ac rm        [id]                                      - delete your account
+                account delete            / ac rm                                                  - delete your account
                 
                 >> POST ------------------------------------------------------------------------------------------------------------------------
                 post feed                 / p feed                                                 - view feed

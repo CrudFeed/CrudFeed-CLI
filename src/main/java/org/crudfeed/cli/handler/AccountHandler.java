@@ -178,9 +178,11 @@ public class AccountHandler {
         ViewAccountPageDto dto = new ViewAccountPageDto(
                 0L,
                 nickname,
-                0L,
-                0L,
+                "",
+                "",
                 null,
+                0,
+                0,
                 null,
                 null
         );
@@ -192,6 +194,18 @@ public class AccountHandler {
         EditAccountPageRequestDto dto = new EditAccountPageRequestDto(content);
 
         String response = api.sendPost("editAccountPage", dto);
+
+        println(response);
+    }
+
+    public void changeEmail(String email) {
+        ChangeEmailRequestDto dto = new ChangeEmailRequestDto(email);
+
+        String response = api.sendPost("changeEmail", dto);
+
+        if (response.contains("successfully")) {
+            session.getCurrentUser().setEmail(email);
+        }
 
         println(response);
     }

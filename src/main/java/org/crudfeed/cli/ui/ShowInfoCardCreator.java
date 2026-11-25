@@ -40,18 +40,18 @@ public class ShowInfoCardCreator {
                     : "N/A";
 
             return "\nID: " + userInfo.id() +
-                    "\nEmail: " + userInfo.email() +
                     "\nNickname: " + userInfo.nickname() +
                     "\nDisplay name: " + userInfo.displayName() +
+                    "\nEmail: " + userInfo.email() +
+                    "\nVerified email: " + userInfo.isVerifiedEmail() +
                     "\nBio: " + userInfo.bio() +
-                    "\nRole: " + userInfo.role() +
                     "\nAvatar: " + "ONLY IN GUI" +
-                    "\nLast seen: " + lastSeen +
+                    "\nRole: " + userInfo.role() +
+                    "\nBanned: " + userInfo.banned() +
+                    "\nDeleted: " + userInfo.deleted() +
                     "\nCreated at: " + createdAt +
                     "\nUpdated at: " + updatedAt +
-                    "\nVerified email: " + userInfo.isVerifiedEmail() +
-                    "\nDeleted: " + userInfo.deleted() +
-                    "\nBanned: " + userInfo.banned() +
+                    "\nLast seen: " + lastSeen +
                     "\n";
 
         } catch (Exception e) {

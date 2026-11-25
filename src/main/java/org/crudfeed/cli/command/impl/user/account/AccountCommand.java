@@ -12,6 +12,8 @@ public class AccountCommand implements Command {
     private final Map<String, Command> subCommands = new HashMap<>();
 
     public AccountCommand() {
+        subCommands.put("email", new EmailCommand());
+
         subCommands.put("display-name", new DisplayNameCommand());
         subCommands.put("dn", subCommands.get("display-name"));
 
@@ -45,8 +47,12 @@ public class AccountCommand implements Command {
         subCommands.put("lf", subCommands.get("friends"));
 
         subCommands.put("logout", new LogoutCommand());
+
         subCommands.put("edit", new EditCommand());
+
         subCommands.put("delete", new DeleteCommand());
+        subCommands.put("rm", subCommands.get("delete"));
+
     }
 
     @Override
