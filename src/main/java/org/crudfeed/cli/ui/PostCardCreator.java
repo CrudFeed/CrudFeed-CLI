@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crudfeed.core.dto.ViewFeedRequestDto;
+import org.crudfeed.core.dto.ViewPostRequestDto;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -25,18 +25,26 @@ public class PostCardCreator {
             return "No posts or error: " + jsonResponse;
         }
 
+        String trimmed = jsonResponse.trim();
+
         try {
-            List<ViewFeedRequestDto> posts = objectMapper.readValue(jsonResponse, new TypeReference<>() {});
+            List<ViewPostRequestDto> posts;
+            if (trimmed.startsWith("[")) {
+                posts = objectMapper.readValue(trimmed, new TypeReference<>() {});
+            } else if (trimmed.startsWith("{")) {
+                posts = List.of(objectMapper.readValue(trimmed, ViewPostRequestDto.class));
+            } else {
+                return "Failed to parse posts: unexpected JSON format";
+            }
 
             if (posts.isEmpty()) {
                 return "Feed is empty.";
             }
 
+            DateTimeFormatter formatter = dateFormatter.withZone(ZoneId.systemDefault());
             StringBuilder result = new StringBuilder();
 
-            for (ViewFeedRequestDto post : posts) {
-                DateTimeFormatter formatter = dateFormatter.withZone(ZoneId.systemDefault());
-
+            for (ViewPostRequestDto post : posts) {
                 String createdAt = post.createdAt() != null
                         ? formatter.format(post.createdAt())
                         : "N/A";
