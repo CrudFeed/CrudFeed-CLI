@@ -17,6 +17,11 @@ public class ShowCommand implements Command {
     }
 
     @Override
+    public boolean requiresAuth() {
+        return true;
+    }
+
+    @Override
     public void execute(String argument) {
         println(postCardCreator.createPostCard(postHandler.showUserPostsById()));
     }

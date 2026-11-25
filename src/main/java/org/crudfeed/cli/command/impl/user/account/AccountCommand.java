@@ -1,6 +1,8 @@
 package org.crudfeed.cli.command.impl.user.account;
 
 import org.crudfeed.cli.command.Command;
+import org.crudfeed.cli.session.Session;
+
 import java.util.HashMap;
 import java.util.Map;
 import static java.lang.IO.*;
@@ -64,6 +66,11 @@ public class AccountCommand implements Command {
 
         if (subCommand == null) {
             println("Unknown account sub-command: '" + subCommandName + "'. Try: show, login, logout...");
+            return;
+        }
+
+        if (subCommand.requiresAuth() && !Session.getINSTANCE().isLoggedIn()) {
+            println("You are not logged in!");
             return;
         }
 

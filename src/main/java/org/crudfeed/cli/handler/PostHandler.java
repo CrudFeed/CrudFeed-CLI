@@ -19,45 +19,28 @@ public class PostHandler {
     private final ResponseClient api = ResponseClient.getINSTANCE();
 
     public void createPost(String content) {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
+        CreatePostRequestDto dto = new CreatePostRequestDto(session.getCurrentUser().getId(), content);
 
-            CreatePostRequestDto dto = new CreatePostRequestDto(currentUserId, content);
+        String response = api.sendPost("createPost", dto);
 
-            String response = api.sendPost("createPost", dto);
+        println(response);
 
-            println(response);
-        } else {
-            println("You are not logged in!");
-        }
     }
 
     public void editPost(long postId, String content) {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
+        EditPostRequestDto dto = new EditPostRequestDto(session.getCurrentUser().getId(), postId, content);
 
-            EditPostRequestDto dto = new EditPostRequestDto(currentUserId, postId, content);
+        String response = api.sendPost("editPost", dto);
 
-            String response = api.sendPost("editPost", dto);
-
-            println(response);
-        } else {
-            println("You are not logged in!");
-        }
+        println(response);
     }
 
     public void deletePost(long postId) {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
+        PostRequestDto dto = new PostRequestDto(session.getCurrentUser().getId(), postId);
 
-            PostRequestDto dto = new PostRequestDto(currentUserId, postId);
+        String response = api.sendPost("deletePost", dto);
 
-            String response = api.sendPost("deletePost", dto);
-
-            println(response);
-        }  else {
-            println("You are not logged in!");
-        }
+        println(response);
     }
 
     public String viewFeed() {
@@ -65,26 +48,15 @@ public class PostHandler {
     }
 
     public String showUserPostsById() {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
+        AccountIdRequestDto dto = new AccountIdRequestDto(session.getCurrentUser().getId());
 
-            AccountIdRequestDto dto = new AccountIdRequestDto(currentUserId);
-
-            return api.sendPost("showUserPostsById", dto);
-        }
-
-        return "You are not logged in!";
+        return api.sendPost("showUserPostsById", dto);
     }
 
     public String viewUserLikes() {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
+        AccountIdRequestDto dto = new AccountIdRequestDto(session.getCurrentUser().getId());
 
-            AccountIdRequestDto dto = new AccountIdRequestDto(currentUserId);
-
-            return api.sendPost("viewUserLikes", dto);
-        }
-        return "You are not logged in!";
+        return api.sendPost("viewUserLikes", dto);
     }
 
     public String searchPostById(long postId) {
@@ -100,30 +72,18 @@ public class PostHandler {
     }
 
     public void likePost(long postId) {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
+        PostRequestDto dto = new PostRequestDto(session.getCurrentUser().getId(), postId);
 
-            PostRequestDto dto = new PostRequestDto(currentUserId, postId);
+        String response = api.sendPost("likePost", dto);
 
-            String response = api.sendPost("likePost", dto);
-
-            println(response);
-        } else {
-            println("You are not logged in!");
-        }
+        println(response);
     }
 
     public void dislikePost(long postId) {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
+        PostRequestDto dto = new PostRequestDto(session.getCurrentUser().getId(), postId);
 
-            PostRequestDto dto = new PostRequestDto(currentUserId, postId);
+        String response = api.sendPost("dislikePost", dto);
 
-            String response = api.sendPost("dislikePost", dto);
-
-            println(response);
-        } else {
-            println("You are not logged in!");
-        }
+        println(response);
     }
 }

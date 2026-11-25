@@ -1,6 +1,7 @@
 package org.crudfeed.cli.command.impl.user.post;
 
 import org.crudfeed.cli.command.Command;
+import org.crudfeed.cli.session.Session;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +56,11 @@ public class PostCommand implements Command {
 
         if (subCommand == null) {
             println("Unknown post sub-command: '" + subCommandName + "'. Try: create, edit, delete, like...");
+            return;
+        }
+
+        if (subCommand.requiresAuth() && !Session.getINSTANCE().isLoggedIn()) {
+            println("You are not logged in!");
             return;
         }
 

@@ -19,11 +19,6 @@ public class MessageHandler {
     private final ResponseClient api = ResponseClient.getINSTANCE();
 
     public void writeMessage(String receiverNickname, String content) {
-        if (!session.isLoggedIn()) {
-            println("You are not logged in!");
-            return;
-        }
-
         long currentUserId = session.getCurrentUser().getId();
 
         WriteMessageRequestDto dto = new WriteMessageRequestDto(currentUserId, receiverNickname, content);
@@ -33,42 +28,30 @@ public class MessageHandler {
     }
 
     public String viewMessages(String receiverNickname) {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
+        long currentUserId = session.getCurrentUser().getId();
 
-            ViewMessagesRequestDto dto = new ViewMessagesRequestDto(currentUserId, receiverNickname);
+        ViewMessagesRequestDto dto = new ViewMessagesRequestDto(currentUserId, receiverNickname);
 
-            return  api.sendPost("viewMessages", dto);
-        } else {
-            return "You are not logged in!";
-        }
+        return  api.sendPost("viewMessages", dto);
     }
 
     public void editMessage(long messageId, String content) {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
+        long currentUserId = session.getCurrentUser().getId();
 
-            EditMessageRequestDto dto = new EditMessageRequestDto(currentUserId, messageId, content);
+        EditMessageRequestDto dto = new EditMessageRequestDto(currentUserId, messageId, content);
 
-            String response = api.sendPost("editMessage", dto);
+        String response = api.sendPost("editMessage", dto);
 
-            println(response);
-        } else {
-            println("You are not logged in!");
-        }
+        println(response);
     }
 
     public void deleteMessage(long messageId) {
-        if (session.isLoggedIn()) {
-            long currentUserId = session.getCurrentUser().getId();
+        long currentUserId = session.getCurrentUser().getId();
 
-            DeleteMessageRequestDto dto = new DeleteMessageRequestDto(currentUserId, messageId);
+        DeleteMessageRequestDto dto = new DeleteMessageRequestDto(currentUserId, messageId);
 
-            String response = api.sendPost("deleteMessage", dto);
+        String response = api.sendPost("deleteMessage", dto);
 
-            println(response);
-        } else {
-            println("You are not logged in!");
-        }
+        println(response);
     }
 }

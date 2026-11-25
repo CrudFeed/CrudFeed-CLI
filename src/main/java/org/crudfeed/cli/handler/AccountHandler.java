@@ -30,7 +30,7 @@ public class AccountHandler {
         try {
             SignUpRequestDto dto = new SignUpRequestDto(email, nickname, displayName, password);
 
-            String response = api.sendPost("sign-up", dto);
+            String response = api.sendPost("signUp", dto);
 
             if (response == null || response.startsWith("Error")) {
                 println(response != null ? response : "Error: Empty response from server");
@@ -80,7 +80,7 @@ public class AccountHandler {
         try {
             SignInRequestDto dto = new SignInRequestDto(email, password);
 
-            String response = api.sendPost("sign-in", dto);
+            String response = api.sendPost("signIn", dto);
 
             if (response == null || response.startsWith("Error")) {
                 println(response != null ? response : "Error: Empty response from server");

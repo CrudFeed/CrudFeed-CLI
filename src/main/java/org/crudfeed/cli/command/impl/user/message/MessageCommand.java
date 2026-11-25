@@ -1,6 +1,7 @@
 package org.crudfeed.cli.command.impl.user.message;
 
 import org.crudfeed.cli.command.Command;
+import org.crudfeed.cli.session.Session;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,11 @@ public class MessageCommand implements Command {
 
         if (subCommand == null) {
             println("Unknown message sub-command: '" + subCommandName + "'. Try: show, write, edit, delete");
+            return;
+        }
+
+        if (subCommand.requiresAuth() && !Session.getINSTANCE().isLoggedIn()) {
+            println("You are not logged in!");
             return;
         }
 

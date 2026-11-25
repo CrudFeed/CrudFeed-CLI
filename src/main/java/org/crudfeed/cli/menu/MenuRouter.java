@@ -129,7 +129,7 @@ public class MenuRouter {
                     }
                 }
 
-                if (command.requiresAuth() && currentUser == null) {
+                if (command.requiresAuth() && (currentUser == null || !session.isLoggedIn())) {
                     println("You are not logged in!");
                     continue;
                 }

@@ -9,7 +9,7 @@ import static java.lang.IO.*;
 public class SearchByIdCommand implements Command {
 
     private final PostHandler postHandler = PostHandler.getINSTANCE();
-    private final PostCardCreator  postCardCreator = PostCardCreator.getINSTANCE();
+    private final PostCardCreator postCardCreator = PostCardCreator.getINSTANCE();
 
     @Override
     public String getName() {
@@ -20,8 +20,10 @@ public class SearchByIdCommand implements Command {
     public void execute(String argument) {
         String input = argument.trim();
 
-        if (input.isEmpty()) {println("Usage - search -i [id]"); return;}
-
+        if (input.isEmpty()) {
+            println("Usage - search -i [id]");
+            return;
+        }
 
         println(postCardCreator.createPostCard(postHandler.searchPostById(Long.parseLong(argument))));
 
