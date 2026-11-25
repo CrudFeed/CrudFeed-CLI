@@ -50,6 +50,7 @@ public class PostCardCreator {
                         .append("\nAuthor (NAME): ").append(post.authorName())
                         .append("\nText: ").append(post.content())
                         .append("\nLikes: ").append(post.likes())
+                        .append("\nDislikes: ").append(post.dislikes())
                         .append("\nCreated at: ").append(createdAt)
                         .append("\nUpdated at: ").append(updatedAt)
                         .append("\n");
