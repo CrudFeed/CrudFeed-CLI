@@ -183,8 +183,14 @@ public class AccountHandler {
         println(response);
     }
 
-    public String showFriendsList(long userId, long friendId, String friendName, boolean confirmed) {
-        ShowFriendsListRequestDto dto = new ShowFriendsListRequestDto(userId, friendId, friendName);
+    public String showFriendsList(long userId) {
+        ShowFriendsListRequestDto dto = new ShowFriendsListRequestDto(
+                userId,
+                0,
+                "",
+                false,
+                false
+        );
 
         return api.sendPost("showFriendsList", dto);
     }

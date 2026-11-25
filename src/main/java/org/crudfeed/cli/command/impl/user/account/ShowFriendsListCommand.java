@@ -26,10 +26,7 @@ public class ShowFriendsListCommand implements Command {
     @Override
     public void execute(String argument) {
         println(friendsListCardCreator.createFriendListCard(accountHandler.showFriendsList(
-                session.getCurrentUser().getId(),
-                0,
-                "",
-                false
+                session.getCurrentUser().getId()
                 ))
         );
     }
