@@ -5,7 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crudfeed.core.dto.ViewAccountPageRequestDto;
+import org.crudfeed.core.dto.account.ViewAccountPageRequestDto;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;

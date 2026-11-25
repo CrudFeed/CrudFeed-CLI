@@ -9,7 +9,7 @@ import org.crudfeed.cli.command.impl.user.post.PostCommand;
 import org.crudfeed.cli.command.impl.user.message.MessageCommand;
 import org.crudfeed.cli.handler.AccountHandler;
 import org.crudfeed.cli.session.Session;
-import org.crudfeed.core.dto.GetBannedRequestDto;
+import org.crudfeed.core.dto.account.GetBannedRequestDto;
 import org.crudfeed.core.entity.Role;
 import org.crudfeed.core.entity.User;
 

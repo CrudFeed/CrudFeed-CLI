@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.crudfeed.core.dto.ShowFriendsListRequestDto;
+import org.crudfeed.core.dto.account.ShowFriendsListRequestDto;
 
 import java.util.List;
 

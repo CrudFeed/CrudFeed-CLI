@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crudfeed.cli.session.Session;
 import org.crudfeed.cli.network.ResponseClient;
-import org.crudfeed.core.dto.*;
+import org.crudfeed.core.dto.account.AccountIdRequestDto;
+import org.crudfeed.core.dto.post.*;
 
 import static java.lang.IO.*;
 

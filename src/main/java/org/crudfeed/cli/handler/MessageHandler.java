@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crudfeed.cli.session.Session;
 import org.crudfeed.cli.network.ResponseClient;
-import org.crudfeed.core.dto.*;
+import org.crudfeed.core.dto.message.ViewMessagesRequestDto;
+import org.crudfeed.core.dto.message.DeleteMessageRequestDto;
+import org.crudfeed.core.dto.message.EditMessageRequestDto;
+import org.crudfeed.core.dto.message.WriteMessageRequestDto;
 
 import static java.lang.IO.*;
 

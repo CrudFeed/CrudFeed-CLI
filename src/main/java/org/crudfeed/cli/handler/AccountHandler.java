@@ -5,8 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crudfeed.cli.session.Session;
 import org.crudfeed.cli.network.ResponseClient;
-import org.crudfeed.core.dto.*;
+import org.crudfeed.core.dto.account.*;
+import org.crudfeed.core.dto.account.AuthResultResponseDto;
+import org.crudfeed.core.dto.account.SignInRequestDto;
+import org.crudfeed.core.dto.account.SignUpRequestDto;
 import org.crudfeed.core.entity.User;
+import org.crudfeed.core.dto.account.FriendRequestDto;
 
 import static java.lang.IO.*;
 

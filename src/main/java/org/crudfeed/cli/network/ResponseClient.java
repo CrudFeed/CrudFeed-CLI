@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.crudfeed.core.dto.*;
+import org.crudfeed.core.dto.account.AuthResultResponseDto;
 
 import java.net.URI;
 import java.net.http.HttpClient;

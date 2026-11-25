@@ -5,7 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.crudfeed.cli.network.ResponseClient;
-import org.crudfeed.core.dto.*;
+import org.crudfeed.core.dto.mod.ModActionRoleResultResponseDto;
+import org.crudfeed.core.dto.mod.ModInfoRequestDto;
 
 import static java.lang.IO.println;
 import static java.lang.IO.readln;
