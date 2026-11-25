@@ -23,6 +23,12 @@ public class ResponseClient {
     private static final ResponseClient INSTANCE = new ResponseClient();
 
     @Getter
+    private static final String TAILSCALE = "http://100.65.191.8:8080/api" ;
+
+    @Getter
+    private static final String LOCALHOST = "http://localhost:8080/api" ;
+
+    @Getter
     @Setter
     private static String baseUrl = "http://100.65.191.8:8080/api";
 

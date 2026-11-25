@@ -106,12 +106,16 @@ public class AccountHandler {
         String response = api.sendGet("status");
 
         println("Server status: " + response);
-
         println("Server URL: " + ResponseClient.getBaseUrl());
 
+        whoami();
+    }
+
+    public void whoami() {
         if (session.isLoggedIn()) {
-            println("You are logged in as: @" + session.getCurrentUser().getNickname());
+            println("You are logged in as @" + session.getCurrentUser().getNickname());
             println("Your display name is: " + session.getCurrentUser().getDisplayName());
+            println("Your role is: " + session.getCurrentUser().getRole());
             println("Welcome back!");
         } else {
             println("Current user status: @guest" + session.getGuestId());
@@ -122,17 +126,6 @@ public class AccountHandler {
     public void changeServer(String server) {
         ResponseClient.setBaseUrl(server);
         println("Changing server status: " + server);
-    }
-
-    public void whoami() {
-        if (session.isLoggedIn()) {
-            println("You are logged in as @" + session.getCurrentUser().getNickname());
-            println("Your display name is: " + session.getCurrentUser().getDisplayName());
-            println("Welcome back!");
-        } else {
-            println("Current user status: @guest" + session.getGuestId());
-            println("You are not authenticated. Use 'ac login' or 'ac reg' command.");
-        }
     }
 
     public void addOrRemoveFriend(long userId, String friendName, String action) {

@@ -26,27 +26,17 @@ public class ModHelpCommand implements Command {
                 ============================================================================================================================
                 
                 >> ACCOUNT -----------------------------------------------------------------------------------------------------------------
+                mod show              / m show       [id]                                      - show full account info
                 mod ban               / m ban        [id]                                      - ban account
                 mod unban             / m unban      [id]                                      - unban account
                 mod account-delete    / m ac-del     [id]                                      - delete account
                 mod account-restore   / m ac-res     [id]                                      - restore account
                 mod promote           / m promote    [id]                                      - promote account
                 mod demote            / m demote     [id]                                      - demote account
-                mod show              / m show       [id]                                      - show full account info
-                mod ---               ---            ---                                       ---
-                mod ---               ---            ---                                       ---
-                mod ---               ---            ---                                       ---
-                mod ---               ---            ---                                       ---
                 
                 >> POST --------------------------------------------------------------------------------------------------------------------
                 mod post-delete       / m p-del      [id]                                      - delete post
                 mod post-restore      / m p-res      [id]                                      - restore post
-                mod ---               ---            ---                                       ---
-                mod ---               ---            ---                                       ---
-                mod ---               ---            ---                                       ---
-                mod ---               ---            ---                                       ---
-                mod ---               ---            ---                                       ---
-                mod ---               ---            ---                                       ---
                 mod ---               ---            ---                                       ---
                 mod ---               ---            ---                                       ---
                 
@@ -58,7 +48,6 @@ public class ModHelpCommand implements Command {
                 
                 >> SYSTEM ------------------------------------------------------------------------------------------------------------------
                 mod help              / m h                                                    - list of commands
-                mod ---               ---            ---                                       ---
                 mod ---               ---            ---                                       ---
                 mod ---               ---            ---                                       ---
                 mod ---               ---            ---                                       ---

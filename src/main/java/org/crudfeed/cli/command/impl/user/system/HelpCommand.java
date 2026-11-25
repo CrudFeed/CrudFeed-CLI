@@ -20,33 +20,33 @@ public class HelpCommand implements Command {
                 ================================================================================================================================
                 
                 >> ACCOUNT ---------------------------------------------------------------------------------------------------------------------
-                account show              / ac show      [name]                                    - show account by name
-                account login             / ac l         [email] [password]                        - login into account
                 account registration      / ac reg       [email] [name] [display name] [pass]      - create new account
+                account login             / ac l         [email] [password]                        - login into account
                 account logout            / ac logout                                              - logout from account
-                account email             / ac email     [new email]                               - update account email
+                account show              / ac show      [name]                                    - show account by name
                 account nickname          / ac nn        [new nickname]                            - update account nickname
                 account display-name      / ac dn        [new display name]                        - update account display name
+                account email             / ac email     [new email]                               - update account email
                 account password          / ac pass      [new pass]                                - update account password
                 account edit              / ac edit      [text]                                    - update your bio
                 account subscribe         / ac sub       [name]                                    - subscribe to user
                 account unsubscribe       / ac unsub     [name]                                    - unsubscribe from user
-                account delete            / ac rm        [id]                                      - delete your account
+                account friends           / ac lf                                                  - show list of friends
                 account add-friend        / ac af        [name]                                    - add new friend
                 account remove-friend     / ac rf        [name]                                    - delete your friend
-                account friends           / ac lf                                                  - show list of friends
+                account delete            / ac rm        [id]                                      - delete your account
                 
                 >> POST ------------------------------------------------------------------------------------------------------------------------
-                post show                 / p show                                                 - view your posts
                 post feed                 / p feed                                                 - view feed
+                post show                 / p show                                                 - view your posts
+                post search -i            / p src -i     [id]                                      - search posts by ID
+                post search -w            / p src -w     [words]                                   - search posts by words
                 post create               / p create     [text]                                    - create post
                 post edit                 / p edit       [id] [text]                               - update your post
                 post delete               / p rm         [id]                                      - delete your post
                 post like                 / p like       [id]                                      - like post
                 post dislike              / p dislike    [id]                                      - dislike post
                 post likes                / p likes                                                - view posts you liked
-                post search -i            / p src -i     [id]                                      - search posts by ID
-                post search -w            / p src -w     [words]                                   - search posts by words
                 
                 >> MESSAGES --------------------------------------------------------------------------------------------------------------------
                 message show              / msg show     [name]                                    - view your messages
@@ -56,8 +56,8 @@ public class HelpCommand implements Command {
                 
                 >> SYSTEM ----------------------------------------------------------------------------------------------------------------------
                 help                      / h                                                      - list of commands
-                status                    / stat                                                   - server status
                 whoami                    / wm                                                     - user status
+                status                    / stat                                                   - server status
                 change-server             / cs           [http(s)://ip:port/api]                   - change server
                 quit                      / q                                                      - quit from app
                 
